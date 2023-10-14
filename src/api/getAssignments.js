@@ -1,12 +1,7 @@
 const UflApiUrl = "https://corsproxy.io/?https://ufl.instructure.com/api/v1/";
-const PbscApiUrl =
-  "https://corsproxy.io/?https://palmbeachstate.instructure.com/api/v1/";
 
 // todo: env
-const UFL_API_KEY =
-  "1016~Q57LX8lIdvUKXdk07DtEWZCcH2dqquT8fJEbAQ8sv7bqlqJu9EnZRCIwPuHaAZh9";
-const PBSC_API_KEY =
-  "3~JpiAAGvL8vwLSeCJ4OfvwEPFv0DhLDK10KndtukGHFJbshNRBFzacQGURPsgcacs";
+const UFL_API_KEY = localStorage.getItem("canvas_api_key") || null;
 
 // Function to fetch courses
 async function fetchCourses() {
