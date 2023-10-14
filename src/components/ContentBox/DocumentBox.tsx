@@ -27,19 +27,21 @@ const DocumentBox = () => {
   }
 
   return (
-    <div className="w-full h-full bg-gray-100 flex flex-col justify-start items-center text-black p-5">
-      <h1 className="text-4xl">{contextDocument.name}</h1>
-      <div className="flex justify-center items-center w-full h-full">
+    <div className="w-full h-full bg-gray-100 flex flex-col justify-start items-center text-black p-2">
+      <h1 className="text-4xl pt-1 pb-2">{contextDocument.name}</h1>
+      <div className="flex justify-center items-center w-full h-full overflow-hidden">
         {isPdf ? (
           <div className="w-full h-full overflow-hidden relative">
             <Document
               file={contextDocument.url}
               onLoadSuccess={onDocumentLoadSuccess}
-              className="self-center w-full h-full"
+              className="self-center w-full h-full overflow-auto"
             >
               <Page
                 pageNumber={pageNumber}
-                className="absolute top-[-5%] w-1/2"
+                renderTextLayer={false}
+                renderAnnotationLayer={false}
+                className="absolute left-1/2 transform -translate-x-1/2"
               />
             </Document>
           </div>

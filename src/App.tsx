@@ -11,18 +11,19 @@ import { fetchAll } from "./api/canvas-interface";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 function App() {
-  useEffect(() => {
-    async function callFetchData() {
-      try {
-        const data = await fetchAll();
-        console.log(data);
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    }
 
-    callFetchData();
-  }, []);
+  // useEffect(() => {
+  //   async function callFetchData() {
+  //     try {
+  //       const data = await fetchAll();
+  //       console.log(data);
+  //     } catch (error) {
+  //       console.log("Error:", error);
+  //     }
+  //   }
+  //
+  //   callFetchData();
+  // }, []);
 
   return (
     <ContextProvider>
