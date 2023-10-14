@@ -17,7 +17,7 @@ const DocumentBox = () => {
     );
   }
 
-  const isPdf = contextDocument.url.endsWith(".pdf") || contextDocument.url.endsWith("__");
+  const isPdf = contextDocument.doc_type == 'assignment' && contextDocument.url.startsWith("https://corsproxy.io");
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
