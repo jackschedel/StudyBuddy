@@ -68,32 +68,31 @@ async function fetchCourses() {
   async function fetchAllAssignments() {  // calls fetchAssignments for each course
     const courses = await fetchCourses();
     const assignments = [];
-    for (const course of courses) {
-    const newAssignments = await fetchAssignments(course.id);
     try {
-      for (const assignment of newAssignments) {
-          assignments.push(assignment);
-      }
+        for (const course of courses) {
+        const newAssignments = await fetchAssignments(course.id);
+        for (const assignment of newAssignments) {
+            assignments.push(assignment);
+        }
+        }
     } catch (error) {
-      continue;
     }
-  }
   return assignments;
   }
 
   async function fetchAllQuizzes() {  // calls fetchQuizzes for each course
     const courses = await fetchCourses();
     const quizzes = [];
-    for (const course of courses) {
-      const newQuizzes = await fetchQuizzes(course.id);
-      try {
-        for (const quiz of newQuizzes) {
-            quizzes.push(quiz);
-        }
-      } catch (error) {
-        continue;
+    try {
+        for (const course of courses) {
+        const newQuizzes = await fetchQuizzes(course.id);
+        
+            for (const quiz of newQuizzes) {
+                quizzes.push(quiz);
+            }
+        } 
+    }catch (error) {
       }
-    }
   return quizzes;
   }
 
