@@ -1,6 +1,5 @@
 // Your Canvas API URL
-const UflApiUrl = 'localhost:3001/api/v1/';
-const UflUrl = 'localhost:3001';
+const UflUrl = 'http://127.0.0.1:5000/uflproxy/';
 
 // Your Canvas API Token for authentication
 const UFL_API_KEY = "1016~V6eewhmN8zOxHP7PO1gBJaWPuLw0YfTmjrrZmhblmHQC5xBLC5q5QER4cy3w0g2a" 
@@ -8,20 +7,24 @@ const UFL_API_KEY = "1016~V6eewhmN8zOxHP7PO1gBJaWPuLw0YfTmjrrZmhblmHQC5xBLC5q5QE
 
 // Function to fetch courses
 async function fetchCourses() {
-    const response = await fetch(`${UflApiUrl}courses`, {
+    const response = await fetch(`${UflUrl}api/v1/courses`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${UFL_API_KEY}`
       }
     });
+
     return await response.json();
   }
   
   // Function to fetch assignments for a given course
+  /**
+ * @param {any} courseId
+ */
   async function fetchAssignments(courseId) { 
     const validAssignments = [];
     try {
-    const response = await fetch(`${UflApiUrl}courses/${courseId}/assignments`, {
+    const response = await fetch(`${UflUrl}api/v1/courses/${courseId}/assignments`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${UFL_API_KEY}`
@@ -42,10 +45,13 @@ async function fetchCourses() {
     return validAssignments;
   }
   
+  /**
+ * @param {any} courseId
+ */
   async function fetchQuizzes(courseId) { // for one course
     const validQuizzes = [];
     try {
-    const response = await fetch(`${UflApiUrl}courses/${courseId}/quizzes`, {
+    const response = await fetch(`${UflUrl}api/v1/courses/${courseId}/quizzes`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${UFL_API_KEY}`
@@ -120,16 +126,19 @@ async function fetchAll(){  // fetch all assignments and quizzes and sort by dat
     
     // sort by due date here
     newList.sort(function(a,b){
-        return new Date(a.due_at) - new Date(b.due_at);
-    });
+      return new Date(a.due_at).getTime() - new Date(b.due_at).getTime();
+  });  
     return newList;
 }
 
 
+/**
+ * @param {any} courseId
+ */
 async function fetchFiles(courseId){
     const files = [];
     try {
-    const filesResponse = await fetch(`${UflApiUrl}courses/${courseId}/files`, {
+    const filesResponse = await fetch(`${UflUrl}api/v1/courses/${courseId}/files`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${UFL_API_KEY}`
@@ -144,7 +153,7 @@ async function fetchFiles(courseId){
 
         files.push(file)
       }
-      const foldersResponse = await fetch(`${UflApiUrl}courses/${courseId}/folders`, {
+      const foldersResponse = await fetch(`${UflUrl}api/v1/courses/${courseId}/folders`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${UFL_API_KEY}`
@@ -155,10 +164,13 @@ async function fetchFiles(courseId){
     return files;
 }
 
+/**
+ * @param {any} folderId
+ */
 async function fetchFilesByFolder(folderId){
     const files = [];
     try {
-    const response = await fetch(`${UflApiUrl}folders/${folderId}/files`, {
+    const response = await fetch(`${UflUrl}api/v1/folders/${folderId}/files`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${UFL_API_KEY}`
@@ -175,7 +187,7 @@ async function fetchAllFiles() {  // calls fetchFiles for each course
     const files = [];
     try {
         for (const course of courses) {
-            const response = await fetch(`${UflApiUrl}courses/${course.id}/folders`, {
+            const response = await fetch(`${UflUrl}api/v1/courses/${course.id}/folders`, {
                 method: 'GET',
                 headers: {
                   'Authorization': `Bearer ${UFL_API_KEY}`
@@ -195,8 +207,8 @@ async function fetchAllFiles() {  // calls fetchFiles for each course
       }
   return files;
 }
-fetchAllFiles().then((data) => {
-    console.log("done");
+fetchCourses().then((data) => {
+    console.log(data);
 })
 
-export { fetchAll, fetchAllFiles};
+//export { fetchAll, fetchAllFiles};
