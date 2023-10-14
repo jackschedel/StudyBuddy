@@ -6,8 +6,10 @@ const UserMessageBox = () => {
   const [text, setText] = useState("");
 
   const handleSubmit = useCallback(() => {
-    appendChatArray(text);
-    setText("");
+    if (text.trim() !== "") {
+      appendChatArray(text);
+      setText("");
+    }
   }, [text, appendChatArray]);
 
   const handleInputChange = useCallback(
@@ -17,12 +19,23 @@ const UserMessageBox = () => {
     [],
   );
 
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        handleSubmit();
+      }
+    },
+    [handleSubmit],
+  );
+
   return (
     <div className="w-full h-full flex items-center justify-center p-4">
       <textarea
         value={text}
         placeholder={"Chat with StudyBuddy..."}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
         className="resize-none flex items-center mr-2 py-2 px-4 rounded-lg focus:outline-none focus:ring-0 bg-gray-200 focus:bg-gray-300 w-full h-full"
       />
       <button
