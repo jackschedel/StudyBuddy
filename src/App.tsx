@@ -5,6 +5,7 @@ import ContentBox from "./components/ContentBox";
 import UserMessageBox from "./components/UserMessageBox";
 import DocumentSelector from "./components/DocumentSelector";
 import MiscBox from "./components/MiscBox";
+//import {fetchAssignments} from "./api/getAssignments.js";
 
 function App() {
   return (
