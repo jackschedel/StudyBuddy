@@ -19,7 +19,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
     "paths": {
       "@type/*": ["./src/types/*"],
       "@store/*": ["./src/store/*"],
@@ -30,7 +30,5 @@
       "@src/*": ["./src/*"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src/**/*", "paths.json"]
 }
