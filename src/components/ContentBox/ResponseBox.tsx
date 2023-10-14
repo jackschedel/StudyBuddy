@@ -1,8 +1,7 @@
-import React from "react";
-import chatState from "../../hooks/chatState";
+import { useChat } from '../../hooks/chatContext';
 
 const ResponseBox = () => {
-  const { chatArray, appendChatArray } = chatState();
+  const { chatArray } = useChat();
 
   return (
     <div className="w-full h-full bg-red-600 flex items-center justify-center text-white">

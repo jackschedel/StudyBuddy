@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from "react";
-import chatState from "../../hooks/chatState";
+import { useCallback, useState } from 'react';
+import { useChat } from '../../hooks/chatContext';
 
 const UserMessageBox = () => {
-  const { chatArray, appendChatArray } = chatState();
+  const { appendChatArray } = useChat();
   const [text, setText] = useState("");
 
   const handleSubmit = useCallback(() => {
