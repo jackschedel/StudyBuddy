@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 interface IChatContext {
   chatArray: string[];
@@ -10,16 +10,18 @@ const ChatContext = createContext<IChatContext | undefined>(undefined);
 export const useChat = () => {
   const context = useContext(ChatContext);
   if (!context) {
-    throw new Error('useChat must be used within a ChatProvider');
+    throw new Error("useChat must be used within a ChatProvider");
   }
   return context;
 };
 
-export const ChatProvider: React.FC = ({ children }) => {
+export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [chatArray, setChatArray] = useState<string[]>([]);
 
   const appendChatArray = (str: string) => {
-    setChatArray(prevArray => [...prevArray, str]);
+    setChatArray((prevArray) => [...prevArray, str]);
   };
 
   return (

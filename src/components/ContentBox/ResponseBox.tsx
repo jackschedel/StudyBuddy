@@ -1,4 +1,5 @@
-import { useChat } from '../../hooks/chatContext';
+import React from "react";
+import { useChat } from "../../hooks/chatContext";
 
 const ResponseBox = () => {
   const { chatArray } = useChat();
