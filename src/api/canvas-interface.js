@@ -84,13 +84,15 @@ async function fetchCourses() {
   async function fetchAllQuizzes() {  // calls fetchQuizzes for each course
     const courses = await fetchCourses();
     const quizzes = [];
-    for (const course of courses) {
-      const newQuizzes = await fetchQuizzes(course.id);
-      try {
-        for (const quiz of newQuizzes) {
-            quizzes.push(quiz);
-        }
-      } catch (error) {
+    try {
+        for (const course of courses) {
+        const newQuizzes = await fetchQuizzes(course.id);
+        
+            for (const quiz of newQuizzes) {
+                quizzes.push(quiz);
+            }
+        } 
+    }catch (error) {
         continue;
       }
     }
