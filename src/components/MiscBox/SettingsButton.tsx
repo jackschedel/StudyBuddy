@@ -1,3 +1,5 @@
+import React from "react";
+
 const SettingsButton = () => {
   return <div></div>;
 };
