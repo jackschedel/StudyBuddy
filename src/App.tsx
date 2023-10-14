@@ -1,5 +1,5 @@
 import React from "react";
-import { ChatProvider } from "./hooks/AppContext";
+import { ContextProvider } from "./hooks/AppContext";
 import "./App.css";
 import ContentBox from "./components/ContentBox";
 import UserMessageBox from "./components/UserMessageBox";
@@ -23,7 +23,7 @@ function App() {
   // }, []);
 
   return (
-    <ChatProvider>
+    <ContextProvider>
       <div className="App flex w-full h-screen">
         <div className="flex flex-col w-3/4 h-full">
           <div className="h-4/5">
@@ -42,7 +42,7 @@ function App() {
           </div>
         </div>
       </div>
-    </ChatProvider>
+    </ContextProvider>
   );
 }
 
