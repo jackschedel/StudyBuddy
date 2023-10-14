@@ -1,24 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import ContentBox from "./components/ContentBox";
+import UserMessageBox from "./components/UserMessageBox";
+import DocumentSelector from "./components/DocumentSelector";
+import MiscBox from "./components/MiscBox";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App flex w-full h-screen">
+      <div className="flex flex-col w-3/4 h-full">
+        <div className="h-4/5">
+          <ContentBox />
+        </div>
+        <div className="h-1/5">
+          <UserMessageBox />
+        </div>
+      </div>
+      <div className="flex flex-col w-1/4 h-full">
+        <div className="h-4/5">
+          <DocumentSelector />
+        </div>
+        <div className="h-1/5">
+          <MiscBox />
+        </div>
+      </div>
     </div>
   );
 }
