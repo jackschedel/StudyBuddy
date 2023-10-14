@@ -18,6 +18,8 @@ async function fetchCourses() {
   
   // Function to fetch assignments for a given course
   async function fetchAssignments(courseId) { 
+    const validAssignments = [];
+    try {
     const response = await fetch(`${UflApiUrl}courses/${courseId}/assignments`, {
       method: 'GET',
       headers: {
@@ -25,8 +27,6 @@ async function fetchCourses() {
       }
     });
     const assignments = await response.json();
-    const validAssignments = [];
-    try {
       for (const assignment of assignments){
         // filter out future, old, and locked assignments
         if (assignment.submission_types.includes('online_quiz') && assignment.locked_for_user == false 
@@ -42,6 +42,8 @@ async function fetchCourses() {
   }
   
   async function fetchQuizzes(courseId) { // for one course
+    const validQuizzes = [];
+    try {
     const response = await fetch(`${UflApiUrl}courses/${courseId}/quizzes`, {
       method: 'GET',
       headers: {
@@ -49,8 +51,7 @@ async function fetchCourses() {
       }
     });
     const quizzes = await response.json();
-    const validQuizzes = [];
-    try {
+    
       for (const quiz of quizzes){
         // filter out future, old, hidden, and locked quizzes
         if (quiz.hide_results != "always" && quiz.locked_for_user == false 
