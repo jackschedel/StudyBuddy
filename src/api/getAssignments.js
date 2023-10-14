@@ -120,3 +120,5 @@ async function fetchAll(){
     });
     console.log(newList);
 }
+
+export { fetchCourses, fetchAssignments };
