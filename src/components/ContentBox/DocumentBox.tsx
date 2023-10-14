@@ -37,12 +37,18 @@ const DocumentBox = () => {
               onLoadSuccess={onDocumentLoadSuccess}
               className="self-center w-full h-full overflow-auto"
             >
-              <Page
-                pageNumber={pageNumber}
-                renderTextLayer={false}
-                renderAnnotationLayer={false}
-                className="absolute left-1/2 transform -translate-x-1/2"
-              />
+              {Array.from(new Array(numPages), (el, index) => [
+                <Page
+                  key={`page_${index + 1}`}
+                  pageNumber={index + 1}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                  className="absolute left-1/2 transform -translate-x-1/2"
+                />,
+                numPages > 1 && index < numPages - 1 ? (
+                  <div className="h-2" key={`divider_${index + 1}`}></div>
+                ) : null,
+              ]).reduce((prev, curr) => prev.concat(curr), [])}
             </Document>
           </div>
         ) : (
