@@ -5,7 +5,8 @@ import { Document, Page } from "react-pdf";
 
 const DocumentBox = () => {
   const { contextDocument } = useAppContext();
-  const [prevContextDocument, setPrevContextDocument] = useState<ContextDocument | null>(null);
+  const [prevContextDocument, setPrevContextDocument] =
+    useState<ContextDocument | null>(null);
   const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -17,7 +18,9 @@ const DocumentBox = () => {
     );
   }
 
-  const isPdf = contextDocument.doc_type == 'assignment' && contextDocument.url.startsWith("https://corsproxy.io");
+  const isPdf =
+    contextDocument.doc_type == "assignment" &&
+    contextDocument.url.startsWith("https://corsproxy.io");
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
@@ -28,13 +31,18 @@ const DocumentBox = () => {
       <h1 className="text-4xl">{contextDocument.name}</h1>
       <div className="flex justify-center items-center w-full h-full">
         {isPdf ? (
-          <Document
-            file={contextDocument.url}
-            onLoadSuccess={onDocumentLoadSuccess}
-            className="self-center"
-          >
-            <Page pageNumber={pageNumber} />
-          </Document>
+          <div className="w-full h-full overflow-hidden relative">
+            <Document
+              file={contextDocument.url}
+              onLoadSuccess={onDocumentLoadSuccess}
+              className="self-center w-full h-full"
+            >
+              <Page
+                pageNumber={pageNumber}
+                className="absolute top-[-5%] w-1/2"
+              />
+            </Document>
+          </div>
         ) : (
           <p className="self-center">
             ContextDocumentURL: {contextDocument.url}
