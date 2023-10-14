@@ -1,9 +1,10 @@
 // Your Canvas API URL
-const UflApiUrl = 'https://corsproxy.io/?https://ufl.instructure.com/api/v1/';
-const UflUrl = 'https://corsproxy.io/?https://ufl.instructure.com/';
+const UflApiUrl = 'localhost:3001/api/v1/';
+const UflUrl = 'localhost:3001';
 
 // Your Canvas API Token for authentication
-const UFL_API_KEY = localStorage.getItem("canvas_api_key") || null;
+const UFL_API_KEY = "1016~V6eewhmN8zOxHP7PO1gBJaWPuLw0YfTmjrrZmhblmHQC5xBLC5q5QER4cy3w0g2a" 
+// localStorage.getItem("canvas_api_key") || null;
 
 // Function to fetch courses
 async function fetchCourses() {
@@ -92,7 +93,7 @@ async function fetchCourses() {
                 quizzes.push(quiz);
             }
         } 
-    }catch (error) {
+    } catch(error) {
       }
   return quizzes;
   }
@@ -123,8 +124,79 @@ async function fetchAll(){  // fetch all assignments and quizzes and sort by dat
     });
     return newList;
 }
-fetchAll().then((data) => {
+
+
+async function fetchFiles(courseId){
+    const files = [];
+    try {
+    const filesResponse = await fetch(`${UflApiUrl}courses/${courseId}/files`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${UFL_API_KEY}`
+      }
+    });
+    const filesJSON = await filesResponse.json();
+
+    //console.log(filesJSON)
+      for (const file of filesJSON){
+        // filter out future, old, hidden, and locked quizzes
+        console.log(file.folders_url + " " + file.files_url)
+
+        files.push(file)
+      }
+      const foldersResponse = await fetch(`${UflApiUrl}courses/${courseId}/folders`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${UFL_API_KEY}`
+        }
+      });
+    } catch (error){
+    }
+    return files;
+}
+
+async function fetchFilesByFolder(folderId){
+    const files = [];
+    try {
+    const response = await fetch(`${UflApiUrl}folders/${folderId}/files`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${UFL_API_KEY}`
+      }
+    });
+    return await response.json();
+    } catch (error){
+    }
+    // return empty array if no files
+    return [];
+}
+async function fetchAllFiles() {  // calls fetchFiles for each course
+    const courses = await fetchCourses();
+    const files = [];
+    try {
+        for (const course of courses) {
+            const response = await fetch(`${UflApiUrl}courses/${course.id}/folders`, {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${UFL_API_KEY}`
+                }
+              });
+              const newFolders = await response.json();
+              for (const folder of newFolders){
+                    const newFiles = await fetchFilesByFolder(folder.id);
+                    for (const file of newFiles){
+                        const ext = file.filename.substring(file.filename.length - 4);
+                        if (ext == ".pdf" || ext == "pptx")
+                            files.push(file);
+                    }
+              }
+        }
+    }catch (error) {
+      }
+  return files;
+}
+fetchAllFiles().then((data) => {
     console.log("done");
 })
 
-export { fetchAll };
+export { fetchAll, fetchAllFiles};
