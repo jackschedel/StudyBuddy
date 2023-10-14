@@ -66,7 +66,7 @@ const SelectorList: React.FC<SelectorListProps> = ({
         <button
           key={name}
           onClick={() => handleDocumentSelection({ name, url: urls[index] })}
-          className="bg-gray-200 border border-gray-800 hover:bg-gray-400 text-black py-3 rounded m-1 h-[50px]"
+          className="bg-gray-200 border border-gray-400 hover:bg-gray-300 hover:border-gray-600 text-black py-3 m-1 h-[50px]"
         >
           {name}
         </button>

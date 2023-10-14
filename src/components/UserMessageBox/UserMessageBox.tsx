@@ -18,7 +18,7 @@ const UserMessageBox = () => {
   );
 
   return (
-    <div className="w-full h-full flex items-center justify-center px-16 py-4">
+    <div className="w-full h-full flex items-center justify-center p-4">
       <textarea
         value={text}
         placeholder={"Chat with StudyBuddy..."}
