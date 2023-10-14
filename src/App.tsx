@@ -1,29 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ContextProvider } from "./hooks/AppContext";
 import "./App.css";
-import { pdfjs } from 'react-pdf';
+import { pdfjs } from "react-pdf";
 import ContentBox from "./components/ContentBox";
 import UserMessageBox from "./components/UserMessageBox";
 import DocumentSelector from "./components/DocumentSelector";
 import MiscBox from "./components/MiscBox";
-import { fetchAssignments } from "./api/getAssignments.js";
-import { useEffect } from "react";
+import { fetchAll } from "./api/canvas-interface";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 function App() {
-  // useEffect(() => {
-  //   async function callFetchAssignments() {
-  //     try {
-  //       const assignments = await fetchAssignments(courseId); // replace courseId with the actual course id
-  //       console.log(assignments);
-  //     } catch (error) {
-  //       console.log('Error:', error);
-  //     }
-  //   }
-  //
-  //   callFetchAssignments();
-  // }, []);
+  useEffect(() => {
+    async function callFetchData() {
+      try {
+        const data = await fetchAll();
+        console.log(data);
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    }
+
+    callFetchData();
+  }, []);
 
   return (
     <ContextProvider>
