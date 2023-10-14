@@ -1,5 +1,5 @@
 import React from "react";
-import { ChatProvider } from "./hooks/chatContext";
+import { ChatProvider } from "./hooks/AppContext";
 import "./App.css";
 import ContentBox from "./components/ContentBox";
 import UserMessageBox from "./components/UserMessageBox";

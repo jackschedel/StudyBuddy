@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useState } from "react";
 
-interface IChatContext {
+interface AppContext {
   chatArray: string[];
   appendChatArray: (str: string) => void;
 }
 
-const ChatContext = createContext<IChatContext | undefined>(undefined);
+const AppContext = createContext<AppContext | undefined>(undefined);
 
 export const useChat = () => {
-  const context = useContext(ChatContext);
+  const context = useContext(AppContext);
   if (!context) {
     throw new Error("useChat must be used within a ChatProvider");
   }
@@ -25,8 +25,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <ChatContext.Provider value={{ chatArray, appendChatArray }}>
+    <AppContext.Provider value={{ chatArray, appendChatArray }}>
       {children}
-    </ChatContext.Provider>
+    </AppContext.Provider>
   );
 };
