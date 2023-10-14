@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState } from "react";
+import { ContextDocument } from "@src/types";
 
 interface AppContext {
   chatArray: string[];
   appendChatArray: (str: string) => void;
-  document: string;
-  setDocument: (str: string) => void;
+  contextDocument: ContextDocument| null;
+  setContextDocument: (doc: ContextDocument) => void;
 }
 
 const AppContext = createContext<AppContext | undefined>(undefined);
@@ -21,7 +22,7 @@ export const ContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [chatArray, setChatArray] = useState<string[]>([]);
-  const [document, setDocument] = useState<string>("No Document Selected!");
+  const [contextDocument, setContextDocument] = useState<ContextDocument| null>(null);
 
   const appendChatArray = (str: string) => {
     setChatArray((prevArray) => [...prevArray, str]);
@@ -29,7 +30,7 @@ export const ContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <AppContext.Provider
-      value={{ chatArray, appendChatArray, document, setDocument }}
+      value={{ chatArray, appendChatArray, contextDocument, setContextDocument}}
     >
       {children}
     </AppContext.Provider>

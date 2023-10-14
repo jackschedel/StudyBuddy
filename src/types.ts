@@ -1,6 +1,11 @@
 export type Role = 'user' | 'assistant' | 'system';
 export const roles: Role[] = ['user', 'assistant', 'system'];
 
+export interface ContextDocument{
+  name: string;
+  url: string;
+}
+
 export interface MessageInterface {
   role: Role;
   content: string;

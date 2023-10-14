@@ -4,7 +4,7 @@ const MiscBox = () => {
   const [inputValue, setInputValue] = useState("");
 
   const handleSettingsButton = () => {
-    //seb todo: set hook
+
   };
 
   const handleSubmit = () => {
@@ -17,7 +17,7 @@ const MiscBox = () => {
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        className="mr-4 bg-blue-800"
+        className="mr-4 bg-blue-800 w-full"
       />
       <button
         onClick={handleSubmit}

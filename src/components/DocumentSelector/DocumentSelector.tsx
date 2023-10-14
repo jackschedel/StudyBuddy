@@ -1,7 +1,14 @@
 import React, { useState } from "react";
+import { useChat } from "../../hooks/AppContext";
+import { ContextDocument } from "@src/types";
 
 const DocumentSelector = () => {
   const [selectedTab, setSelectedTab] = useState("assignment");
+  const { setContextDocument } = useChat();
+
+  const handleDocumentSelection = (doc: ContextDocument) => {
+    setContextDocument(doc);
+  };
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center text-white">
@@ -26,7 +33,10 @@ const DocumentSelector = () => {
         </div>
 
         <div className="h-7/8 h-full">
-          <SelectorList selectedTab={selectedTab} />
+          <SelectorList
+            selectedTab={selectedTab}
+            handleDocumentSelection={handleDocumentSelection}
+          />
         </div>
       </div>
     </div>
@@ -35,22 +45,34 @@ const DocumentSelector = () => {
 
 interface SelectorListProps {
   selectedTab: string;
+  handleDocumentSelection: (doc: ContextDocument) => void;
 }
 
-const SelectorList: React.FC<SelectorListProps> = ({ selectedTab }) => {
-  if (selectedTab === "lecture") {
-    return (
-      <div className="w-full h-full bg-purple-600 flex items-center justify-center text-white">
-        LectureSelector
-      </div>
-    );
-  } else {
-    return (
-      <div className="w-full h-full bg-pink-600 flex items-center justify-center text-white">
-        AssignmentSelector
-      </div>
-    );
-  }
+const SelectorList: React.FC<SelectorListProps> = ({
+  selectedTab,
+  handleDocumentSelection,
+}) => {
+  const lectureNames = ["Lecture 1", "Lecture 2", "Lecture 3"];
+  const assignmentNames = ["Assignment 1", "Assignment 2", "Assignment 3"];
+  const lectureUrls = ["lurl1", "lurl2", "lurl3"];
+  const assignmentUrls = ["aurl1", "aurl2", "aurl3"];
+
+  const names = selectedTab === "lecture" ? lectureNames : assignmentNames;
+  const urls = selectedTab === "lecture" ? lectureUrls : assignmentUrls;
+
+  return (
+    <div className="w-full h-full flex flex-col text-white">
+      {names.map((name, index) => (
+        <button
+          key={name}
+          onClick={() => handleDocumentSelection({ name, url: urls[index] })}
+          className="bg-gray-200 border border-gray-800 hover:bg-gray-400 text-black py-3 rounded m-1 h-[50px]"
+        >
+          {name}
+        </button>
+      ))}
+    </div>
+  );
 };
 
 export default DocumentSelector;
