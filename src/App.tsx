@@ -1,12 +1,15 @@
 import React from "react";
 import { ContextProvider } from "./hooks/AppContext";
 import "./App.css";
+import { pdfjs } from 'react-pdf';
 import ContentBox from "./components/ContentBox";
 import UserMessageBox from "./components/UserMessageBox";
 import DocumentSelector from "./components/DocumentSelector";
 import MiscBox from "./components/MiscBox";
 import { fetchAssignments } from "./api/getAssignments.js";
 import { useEffect } from "react";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 function App() {
   // useEffect(() => {

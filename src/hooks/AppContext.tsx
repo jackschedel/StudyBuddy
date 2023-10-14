@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { ContextDocument } from "@src/types";
+import { ContextDocument, DocumentType } from "@src/types";
 
 interface AppContext {
   chatArray: string[];
@@ -10,10 +10,10 @@ interface AppContext {
 
 const AppContext = createContext<AppContext | undefined>(undefined);
 
-export const useChat = () => {
+export const useAppContext = () => {
   const context = useContext(AppContext);
   if (!context) {
-    throw new Error("useChat must be used within a ContextProvider");
+    throw new Error("useAppContext must be used within a ContextProvider");
   }
   return context;
 };

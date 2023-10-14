@@ -1,8 +1,8 @@
 import React from "react";
-import { useChat } from "../../hooks/AppContext";
+import { useAppContext } from "../../hooks/AppContext";
 
 const ResponseBox = () => {
-  const { chatArray } = useChat();
+  const { chatArray } = useAppContext();
 
   return (
     <div className="w-full h-full flex flex-col text-white">

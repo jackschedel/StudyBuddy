@@ -1,7 +1,9 @@
 export type Role = 'user' | 'assistant' | 'system';
 export const roles: Role[] = ['user', 'assistant', 'system'];
+export type DocumentType = 'assignment' | 'lecture';
 
 export interface ContextDocument{
+  doc_type: DocumentType;
   name: string;
   url: string;
 }
