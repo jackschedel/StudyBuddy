@@ -1,12 +1,7 @@
-// Your Canvas API URL
-const UflUrl = 'http://127.0.0.1:5000/uflproxy/';
+const UflUrl = "http://127.0.0.1:5000/uflproxy/";
 
-// Your Canvas API Token for authentication
-const UFL_API_KEY =
-  "1016~Ib1rAaKjrq61HmgjfpAaRRKOReFfJksW0Q7tAm79hZVIdmmjHkiWd6X2JbtHz6Mg";
-// localStorage.getItem("canvas_api_key") || null;
+const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
 
-// Function to fetch courses
 async function fetchCourses() {
   const response = await fetch(`${UflUrl}api/v1/courses`, {
     method: "GET",
@@ -18,7 +13,6 @@ async function fetchCourses() {
   return await response.json();
 }
 
-// Function to fetch assignments for a given course
 /**
  * @param {any} courseId
  */
@@ -35,16 +29,29 @@ async function fetchAssignments(courseId) {
       },
     );
     const assignments = await response.json();
-    for (const assignment of assignments){
-      if (assignment.submission_types.includes('online_quiz')
-      ){
+    for (const assignment of assignments) {
+      if (assignment.submission_types.includes("online_quiz")) {
         assignment.html_url = `${UflUrl}courses/${courseId}/assignments/${assignment.id}/history?headless=1`;
-          validAssignments.push(assignment)
+        validAssignments.push(assignment);
       }
     }
-
   } catch (error) {}
   return validAssignments;
+}
+
+/**
+ * @param {any} courseId
+ */
+async function fetchCourseTasks(courseId) {
+  const assignments = await fetchAssignments(courseId);
+  const quizzes = await fetchQuizzes(courseId);
+  const tasks = [...assignments, ...quizzes];
+
+  tasks.sort(function (a, b) {
+    return new Date(a.due_at).getTime() - new Date(b.due_at).getTime();
+  });
+
+  return tasks;
 }
 
 /**
@@ -67,106 +74,34 @@ async function fetchQuizzes(courseId) {
 
     for (const quiz of quizzes) {
       // filter out future, old, hidden, and locked quizzes
-      if (
-        quiz.hide_results != "always"
-      ) {
+      if (quiz.hide_results != "always") {
         quiz.html_url = `${UflUrl}courses/${courseId}/quizzes/${quiz.id}/history?headless=1`;
         validQuizzes.push(quiz);
       }
     }
-  } catch (error) {
-  }
+  } catch (error) {}
   return validQuizzes;
-}
-
-async function fetchAllAssignments() {
-  // calls fetchAssignments for each course
-  const courses = await fetchCourses();
-  const assignments = [];
-  try {
-    for (const course of courses) {
-      const newAssignments = await fetchAssignments(course.id);
-      for (const assignment of newAssignments) {
-        assignments.push(assignment);
-      }
-    }
-  } catch (error) {}
-  return assignments;
-}
-
-async function fetchAllQuizzes() {
-  // calls fetchQuizzes for each course
-  const courses = await fetchCourses();
-  const quizzes = [];
-  try {
-    for (const course of courses) {
-      const newQuizzes = await fetchQuizzes(course.id);
-
-      for (const quiz of newQuizzes) {
-        quizzes.push(quiz);
-      }
-    }
-  } catch (error) {}
-  return quizzes;
-}
-
-async function fetchAll() {
-  // fetch all assignments and quizzes and sort by date them into one list
-  const quizzes = await fetchAllQuizzes();
-  const assignments = await fetchAllAssignments();
-  const newList = [];
-  try {
-    for (const quiz of quizzes) {
-      newList.push(quiz);
-    }
-  } catch (error) {
-    console.log("no quizzes");
-  }
-  try {
-    for (const assignment of assignments) {
-      newList.push(assignment);
-    }
-  } catch (error) {
-    console.log("no assignments");
-  }
-
-  // sort by due date here
-  newList.sort(function (a, b) {
-    return new Date(a.due_at) - new Date(b.due_at);
-  });
-  return newList;
 }
 
 /**
  * @param {any} courseId
  */
-async function fetchFiles(courseId) {
+async function fetchCourseFiles(courseId) {
   const files = [];
-  try {
-    const filesResponse = await fetch(
-      `${UflUrl}api/v1/courses/${courseId}/files`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${UFL_API_KEY}`,
-        },
-      },
-    );
-    const filesJSON = await filesResponse.json();
-
-    for (const file of filesJSON) {
-      files.push(file);
+  const response = await fetch(`${UflUrl}api/v1/courses/${courseId}/folders`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${UFL_API_KEY}`,
+    },
+  });
+  const newFolders = await response.json();
+  for (const folder of newFolders) {
+    const newFiles = await fetchFilesByFolder(folder.id);
+    for (const file of newFiles) {
+      const ext = file.filename.substring(file.filename.length - 4);
+      if (ext == ".pdf" || ext == "pptx") files.push(file);
     }
-    const foldersResponse = await fetch(
-      `${UflUrl}api/v1/courses/${courseId}/folders`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${UFL_API_KEY}`,
-        },
-      },
-    );
-  } catch (error) {}
+  }
   return files;
 }
 
@@ -187,36 +122,37 @@ async function fetchFilesByFolder(folderId) {
   // return empty array if no files
   return [];
 }
-async function fetchAllFiles() {
-  // calls fetchFiles for each course
+
+/**
+ * @param {any} courseId
+ */
+async function fetchCourse(courseId) {
+  const tasks = await fetchCourseTasks(courseId);
+  const files = await fetchCourseFiles(courseId);
+
+  return { tasks, files };
+}
+
+async function fetchAll() {
   const courses = await fetchCourses();
-  const files = [];
-  try {
-    for (const course of courses) {
-      const response = await fetch(
-        `${UflUrl}api/v1/courses/${course.id}/folders`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${UFL_API_KEY}`,
-          },
-        },
-      );
-      const newFolders = await response.json();
-      for (const folder of newFolders) {
-        const newFiles = await fetchFilesByFolder(folder.id);
-        for (const file of newFiles) {
-          const ext = file.filename.substring(file.filename.length - 4);
-          if (ext == ".pdf" || ext == "pptx") files.push(file);
-        }
-      }
-    }
-  } catch (error) {}
-  return files;
+  const allData = [];
+
+  for (const course of courses) {
+    const courseData = await fetchCourse(course.id);
+    allData.push(courseData);
+  }
+
+  return allData;
 }
 
 fetchAll().then((data) => {
   console.log("done");
 });
 
-//export { fetchAll, fetchAllFiles};
+export {
+  fetchCourses,
+  fetchCourseTasks,
+  fetchCourseFiles,
+  fetchCourse,
+  fetchAll,
+};
