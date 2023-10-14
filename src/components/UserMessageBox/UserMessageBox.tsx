@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { useChat } from '../../hooks/AppContext';
+import React, { useCallback, useState } from "react";
+import { useChat } from "../../hooks/AppContext";
 
 const UserMessageBox = () => {
   const { appendChatArray } = useChat();
@@ -18,7 +18,7 @@ const UserMessageBox = () => {
   );
 
   return (
-    <div className="w-full h-full bg-white flex items-center justify-center px-16 py-4">
+    <div className="w-full h-full flex items-center justify-center px-16 py-4">
       <textarea
         value={text}
         placeholder={"Chat with StudyBuddy..."}
