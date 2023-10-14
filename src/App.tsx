@@ -10,24 +10,19 @@ import { useEffect } from "react";
 
 function App() {
 
-useEffect(() => {
-  async function callFetchAssignments() {
-    try {
-      const assignments = await fetchAssignments(courseId); // replace courseId with the actual course id
-      console.log(assignments);
-    } catch (error) {
-      console.log('Error:', error);
-    }
-  }
-  
-  callFetchAssignments();
-}, []);
+// useEffect(() => {
+//   async function callFetchAssignments() {
+//     try {
+//       const assignments = await fetchAssignments(courseId); // replace courseId with the actual course id
+//       console.log(assignments);
+//     } catch (error) {
+//       console.log('Error:', error);
+//     }
+//   }
+//   
+//   callFetchAssignments();
+// }, []);
 
-  // seb todo: hook get
-
-  
-
-  // seb todo: conditional rendering on hook
   return (
     <div className="App flex w-full h-screen">
       <div className="flex flex-col w-3/4 h-full">
