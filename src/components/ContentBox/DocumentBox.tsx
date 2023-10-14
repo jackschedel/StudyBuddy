@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import { useAppContext } from "../../hooks/AppContext";
 import { ContextDocument, DocumentType } from "@src/types";
 import { Document, Page } from "react-pdf";
 
 const DocumentBox = () => {
   const { contextDocument } = useAppContext();
-  const [prevContextDocument, setPrevContextDocument] =
     useState<ContextDocument | null>(null);
   const [numPages, setNumPages] = useState(0);
-  const [pageNumber, setPageNumber] = useState(1);
+
 
   if (!contextDocument) {
     return (
@@ -52,7 +51,7 @@ const DocumentBox = () => {
             </Document>
           </div>
         ) : (
-          <p className="self-center">
+          <p className="self-center overflow-auto">
             ContextDocumentURL: {contextDocument.url}
           </p>
         )}
