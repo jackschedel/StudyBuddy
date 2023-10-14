@@ -1,10 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
+const Modal: React.FC<{
+  onClose: () => void;
+}> = ({ onClose }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div ref={modalRef} className="bg-white p-5 rounded shadow-lg text-black">
+        <button onClick={onClose} className="float-right">
+          X
+        </button>
+        <div>Your content goes here... </div>
+      </div>
+    </div>
+  );
+};
 
 const MiscBox = () => {
   const [inputValue, setInputValue] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const handleSettingsButton = () => {
-
+    setShowModal(true);
   };
 
   const handleSubmit = () => {
@@ -31,6 +62,7 @@ const MiscBox = () => {
       >
         Settings
       </button>
+      {showModal && <Modal onClose={() => setShowModal(false)} />}
     </div>
   );
 };
