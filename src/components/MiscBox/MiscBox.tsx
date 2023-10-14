@@ -3,6 +3,10 @@ import React, { useState } from "react";
 const MiscBox = () => {
   const [inputValue, setInputValue] = useState("");
 
+  const handleSettingsButton = () => {
+    //seb todo: set hook
+  };
+
   const handleSubmit = () => {
     localStorage.setItem("canvas_api_key", inputValue);
   };
@@ -20,6 +24,12 @@ const MiscBox = () => {
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
         Submit
+      </button>
+      <button
+        onClick={handleSettingsButton}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Settings
       </button>
     </div>
   );

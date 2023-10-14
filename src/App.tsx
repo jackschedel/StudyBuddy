@@ -23,6 +23,11 @@ useEffect(() => {
   callFetchAssignments();
 }, []);
 
+  // seb todo: hook get
+
+  
+
+  // seb todo: conditional rendering on hook
   return (
     <div className="App flex w-full h-screen">
       <div className="flex flex-col w-3/4 h-full">
