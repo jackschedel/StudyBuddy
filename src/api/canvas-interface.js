@@ -35,9 +35,6 @@ async function fetchAssignments(courseId) {
       },
     );
     const assignments = await response.json();
-
-    console.log(assignments.length);
-
     for (const assignment of assignments){
       if (assignment.submission_types.includes('online_quiz')
       ){
@@ -47,8 +44,6 @@ async function fetchAssignments(courseId) {
     }
 
   } catch (error) {}
-  console.log(validAssignments.length);
-
   return validAssignments;
 }
 
@@ -69,22 +64,17 @@ async function fetchQuizzes(courseId) {
       },
     );
     const quizzes = await response.json();
-    console.log(quizzes);
 
     for (const quiz of quizzes) {
       // filter out future, old, hidden, and locked quizzes
       if (
-        quiz.hide_results != "always" &&
-        quiz.locked_for_user == false &&
-        new Date(quiz.due_at).getTime() > new Date("8/15/2023").getTime() &&
-        new Date(quiz.due_at).getTime() < new Date().getTime()
+        quiz.hide_results != "always"
       ) {
         quiz.html_url = `${UflUrl}courses/${courseId}/quizzes/${quiz.id}/history?headless=1`;
         validQuizzes.push(quiz);
       }
     }
   } catch (error) {
-    console.log(error);
   }
   return validQuizzes;
 }
@@ -164,11 +154,7 @@ async function fetchFiles(courseId) {
     );
     const filesJSON = await filesResponse.json();
 
-    //console.log(filesJSON)
     for (const file of filesJSON) {
-      // filter out future, old, hidden, and locked quizzes
-      console.log(file.folders_url + " " + file.files_url);
-
       files.push(file);
     }
     const foldersResponse = await fetch(
@@ -228,8 +214,9 @@ async function fetchAllFiles() {
   } catch (error) {}
   return files;
 }
-fetchAssignments("490443").then((data) => {
-  console.log(data);
+
+fetchAll().then((data) => {
+  console.log("done");
 });
 
 //export { fetchAll, fetchAllFiles};
