@@ -207,7 +207,7 @@ const SelectorList: React.FC<{
   );
 
   return (
-    <div className="w-full h-full flex flex-col text-white">
+    <div className="w-full h-full flex flex-col text-white overflow-y-auto">
       {isLoading || docs.length === 0 ? (
         <div className="w-full h-full flex items-center justify-center">
           {isLoading ? (

@@ -42,7 +42,7 @@ def upload_from_url():
     try:
         data = request.json
         pdf_url = data.get("url")
-        if not pdf_url or not pdf_url.endswith(".pdf"):
+        if not pdf_url:
             return jsonify({"error": "Invalid URL or not a PDF"}), 400
 
         # Fetch the content of the PDF

@@ -4,6 +4,28 @@ const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
 const OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "noApiKey";
 const PINECONE_API_KEY = localStorage.getItem("pinecone_api_key") || "noApiKey";
 
+
+/**
+ * @param {any} documentUrl
+ */
+async function uploadFromUrl(documentUrl) {
+  try {
+    const response = await fetch(`${ServerUrl}upload_from_url`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: `${documentUrl}`,
+      }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 /**
  * @param {any} documentText
  */
@@ -90,7 +112,7 @@ async function fetchAnnouncements(courseId) { // returns list of pure announceme
     });
     const temp = await response.json();
     const announcements = []
-    for (var i = 0; i < announcements.length; i++) { 
+    for (var i = 0; i < announcements.length; i++) {
       announcements.push(temp[i].message.replace(/<[^>]*>/g, ''));
     }
     return announcements;
@@ -252,4 +274,5 @@ module.exports = {
   initializePinecone,
   generateQuestions,
   queryDocumentQuestion,
+  uploadFromUrl,
 };
