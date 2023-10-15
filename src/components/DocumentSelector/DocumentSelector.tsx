@@ -74,7 +74,7 @@ const DocumentSelector = () => {
               className="bg-gray-600 hover:bg-gray-800 text-white py-3 rounded m-1 flex-grow"
               onClick={() => setSelectedTab("assignment")}
             >
-              Assignment
+              Assignments
             </button>
           </div>
           <div className="flex w-1/2 justify-center">
@@ -82,7 +82,7 @@ const DocumentSelector = () => {
               className="bg-gray-600 hover:bg-gray-800 text-white py-3 rounded m-1 flex-grow"
               onClick={() => setSelectedTab("lecture")}
             >
-              Lecture
+              Materials
             </button>
           </div>
         </div>
@@ -112,7 +112,11 @@ const SelectorList: React.FC<{
       setIsLoading(true); // Set loading status to true when fetching data
       try {
         let data;
-        data = await fetchCourseTasks(selectedCourseId);
+        if (selectedTab == "assignment") {
+          data = await fetchCourseTasks(selectedCourseId);
+        } else {
+          data = await fetchCourseFiles(selectedCourseId);
+        }
         if (data) {
           setCourseData(data);
         } else {
@@ -132,8 +136,10 @@ const SelectorList: React.FC<{
     console.log(courseData);
   }, [courseData]);
 
-  const docs: ContextDocument[] = courseData.reduce(
-    (acc: ContextDocument[], course) => {
+  let docs: ContextDocument[];
+
+  if (selectedTab === "assignment") {
+    docs = courseData.reduce((acc: ContextDocument[], course) => {
       const existingIndex = acc.findIndex(
         (item) => item.name === (course.name ? course.name : course.title),
       );
@@ -144,7 +150,7 @@ const SelectorList: React.FC<{
           acc[existingIndex] = {
             doc_type: selectedTab,
             name: course.title,
-            url: selectedTab == "lecture" ? "" : course.html_url,
+            url: course.html_url,
           };
         }
       } else {
@@ -152,14 +158,19 @@ const SelectorList: React.FC<{
         acc.push({
           doc_type: selectedTab,
           name: course.name ? course.name : course.title,
-          url: selectedTab == "lecture" ? "" : course.html_url,
+          url: course.html_url,
         });
       }
 
       return acc;
-    },
-    [],
-  );
+    }, []);
+  } else {
+    docs = courseData.map((course) => ({
+      doc_type: selectedTab,
+      name: course.display_name,
+      url: course.url,
+    }));
+  }
 
   return (
     <div className="w-full h-full flex flex-col text-white">
