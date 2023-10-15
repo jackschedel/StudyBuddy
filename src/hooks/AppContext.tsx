@@ -4,6 +4,7 @@ import { ContextDocument, DocumentType } from "@src/types";
 interface AppContext {
   chatArray: string[];
   appendChatArray: (str: string) => void;
+  replaceLastChat: (str: string) => void;
   contextDocument: ContextDocument | null;
   setContextDocument: (doc: ContextDocument) => void;
   fetchedCanvasData: any | null;
@@ -32,11 +33,20 @@ export const ContextProvider: React.FC<{ children: React.ReactNode }> = ({
     setChatArray((prevArray) => [...prevArray, str]);
   };
 
+  const replaceLastChat = (str: string) => {
+    setChatArray((prevArray) => {
+      let newArray = [...prevArray];
+      newArray[newArray.length - 1] = str;
+      return newArray;
+    });
+  };
+
   return (
     <AppContext.Provider
       value={{
         chatArray,
         appendChatArray,
+        replaceLastChat,
         contextDocument,
         setContextDocument,
         fetchedCanvasData,
