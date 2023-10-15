@@ -1,18 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../../hooks/AppContext";
 import { ContextDocument, DocumentType } from "@src/types";
 import { Document, Page } from "react-pdf";
-import { uploadFromUrl } from '../../api/api';
+import { uploadFromUrl } from "../../api/api";
 
 const DocumentBox = () => {
-  const { contextDocument } = useAppContext();
-    useState<ContextDocument | null>(null);
+  const { contextDocument, setContextDocument } = useAppContext();
+  useState<ContextDocument | null>(null);
   const [numPages, setNumPages] = useState(0);
 
   useEffect(() => {
     callFetchData();
   }, [contextDocument]);
-
 
   if (!contextDocument) {
     return (
@@ -24,27 +23,26 @@ const DocumentBox = () => {
 
   const isPdf =
     contextDocument.doc_type == "assignment" &&
-    contextDocument.url.startsWith("https://corsproxy.io");
+    contextDocument.url.startsWith("http://localhost");
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
   }
 
   async function callFetchData() {
-    if (contextDocument?.url) {
+    if (
+      contextDocument?.url &&
+      !contextDocument.url.startsWith("http://localhost")
+    ) {
       try {
         const data = await uploadFromUrl(contextDocument.url);
-        console.log("here");
-
         console.log(data);
+        setContextDocument({ ...contextDocument, url: data.pdf_url });
       } catch (error) {
         console.log("Fetch Error:", error);
       }
     }
   }
-
-
-
 
   return (
     <div className="w-full h-full bg-gray-100 flex flex-col justify-start items-center text-black p-2">

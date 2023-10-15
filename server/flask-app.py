@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import requests
 import os
@@ -23,6 +23,9 @@ import pinecone
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+
+STATIC_FOLDER = 'static'
+
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 PINECONE_ENV = "northamerica-northeast1-gcp"
@@ -36,6 +39,10 @@ class HumanMessage:
         return {
             "message": self.message
         }
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory(app.root_path + '/static/', filename)
 
 @app.route('/upload_from_url', methods=['POST'])
 def upload_from_url():
@@ -53,11 +60,11 @@ def upload_from_url():
         # Generate a unique filename based on the fetched content
         content_hash = hashlib.md5(response.content).hexdigest()
         filename = f"{content_hash}.pdf"
-        
-        # Check if UPLOAD_FOLDER exists and create if it doesn't
-        if not os.path.exists(UPLOAD_FOLDER):
-            os.makedirs(UPLOAD_FOLDER)
-        filepath = os.path.join(UPLOAD_FOLDER, filename)
+
+        # Check if STATIC_FOLDER exists and create if it doesn't
+        if not os.path.exists(STATIC_FOLDER):
+            os.makedirs(STATIC_FOLDER)
+        filepath = os.path.join(STATIC_FOLDER, filename)
 
         # Save the fetched content to a local file
         try:
@@ -79,17 +86,15 @@ def upload_from_url():
         # Upload tokenized data to Pinecone
         upload_to_pinecone(tokenized_data)
 
-        os.remove(filepath)
+        # Construct URL for the PDF file
+        pdf_url = f"http://localhost:5000/static/{filename}"
+
         logging.info(f"File {filename} fetched from URL and uploaded to Pinecone successfully.")
-        return jsonify({"message": "Uploaded successfully!"}), 200
-
+        return jsonify({"message": "Uploaded successfully!", "pdf_url": pdf_url}), 200
     except Exception as e:
         logging.error(f"Error processing file fetched from URL {pdf_url}: {e}")
         return jsonify({"error": "An unexpected error occurred"}), 500
 
-    except Exception as e:
-        logging.error(f"Error processing file fetched from URL {pdf_url}: {e}")
-        return jsonify({"error": "An unexpected error occurred"}), 500
 
 #OLD UPLOAD CODE BELOW
 
