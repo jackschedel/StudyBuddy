@@ -1,18 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
 import { ContextDocument, DocumentType } from "@src/types";
+import { fetchCourses } from "../../api/canvas-interface";
 
 const DocumentSelector = () => {
   const [selectedTab, setSelectedTab] = useState<DocumentType>("assignment");
   const { setContextDocument } = useAppContext();
+  const [selectedCourseId, setSelectedCourseId] = useState<null | number>(null);
+  const [courseData, setCourseData] = useState<any[]>([]);
 
   const handleDocumentSelection = (doc: ContextDocument) => {
     setContextDocument(doc);
   };
 
+  useEffect(() => {
+    async function callFetchData() {
+      try {
+        const data = await fetchCourses();
+        setCourseData(data);
+      } catch (error) {
+        console.log("Fetch Error:", error);
+      }
+    }
+
+    callFetchData();
+  }, []);
+
+  useEffect(() => {
+    console.log(selectedCourseId);
+  }, [selectedCourseId]);
+
+  useEffect(() => {
+    console.log(courseData);
+  }, [courseData]);
+
+  const handleCourseChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCourseId(Number(event.target.value));
+  };
+
   return (
     <div className="w-full h-full flex flex-col items-center justify-center text-white">
       <div className="w-full flex flex-col h-full">
+        <div className="flex h-1/8 items-center justify-center">
+          <select
+            onChange={handleCourseChange}
+            className={`w-full bg-gray-100 hover:bg-gray-200 text-black py-3 rounded m-1 border-2 border-gray-400`}
+          >
+            {!courseData || !courseData.length ? (
+              <option>Loading Courses...</option>
+            ) : (
+              courseData.map((course: { id: number; name: string }) => {
+                if (!course.name) {
+                  return null;
+                }
+
+                return (
+                  <option key={course.id} value={course.id}>
+                    {course.name}
+                  </option>
+                );
+              })
+            )}
+          </select>
+        </div>
+
         <div className="flex h-1/8 items-center justify-center">
           <div className="flex w-1/2 justify-center">
             <button
@@ -32,7 +83,7 @@ const DocumentSelector = () => {
           </div>
         </div>
 
-        <div className="h-7/8 h-full">
+        <div className="h-6/8 h-full">
           <SelectorList
             selectedTab={selectedTab}
             handleDocumentSelection={handleDocumentSelection}

@@ -12,19 +12,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 function App() {
 
-  useEffect(() => {
-    async function callFetchData() {
-      try {
-        const data = await fetchCourses();
-        console.log(data);
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    }
-
-    callFetchData();
-  }, []);
-
   return (
     <ContextProvider>
       <div className="App flex w-full h-screen">
