@@ -17,12 +17,18 @@ const UserMessageBox = () => {
   }, [text, appendChatArray]);
 
   const handleAction = useCallback(() => {
-    if (text.trim() !== "") {
+  if(contextDocument === null)
+  return;
+
+    if(contextDocument.doc_type === "assignment") {
+      setText("Review all of the questions that I missed.");
+    } else {
+      setText("Provide a summary of the document.");
+    }
       appendChatArray(text);
       askDocumentQuestion();
       setText("");
-    }
-  }, [text, appendChatArray]);
+  }, [text, appendChatArray, contextDocument]);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {

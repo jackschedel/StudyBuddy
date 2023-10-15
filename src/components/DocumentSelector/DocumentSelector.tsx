@@ -11,10 +11,18 @@ import {
 
 const DocumentSelector = () => {
   const [selectedTab, setSelectedTab] = useState<DocumentType>("assignment");
-  const { setContextDocument, fetchedCanvasData, setFetchedCanvasData } =
+  const { setContextDocument, fetchedCanvasData, setFetchedCanvasData, setChatArray } =
     useAppContext();
   const [selectedCourseId, setSelectedCourseId] = useState<null | number>(null);
   const [courseData, setCourseData] = useState<any[]>([]);
+
+  useEffect(() => {
+    setChatArray([]);
+  }, [selectedTab])
+
+  useEffect(() => {
+    setChatArray([]);
+  }, [selectedCourseId])
 
   async function callFetchAllData() {
     try {

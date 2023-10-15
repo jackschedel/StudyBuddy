@@ -39,7 +39,7 @@ const ResponseBox = () => {
   }, []);
 
   return (
-<div className="w-full h-full flex flex-col text-white pt-4">
+<div className="w-full h-full flex flex-col text-white pt-4 overflow-auto">
       {(chatArray.length === 0 || !contextDocument) ? (
         <div className="">
     <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 rounded-lg m-1 h-auto text-left mx-5`}>
