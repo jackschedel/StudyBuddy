@@ -16,7 +16,7 @@ function App() {
     async function callFetchData() {
       try {
         const data = await fetchCourses();
-        console.log("fetchCourses: " + data);
+        console.log(data);
       } catch (error) {
         console.log("Error:", error);
       }

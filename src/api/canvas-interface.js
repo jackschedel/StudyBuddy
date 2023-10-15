@@ -1,5 +1,6 @@
-const UflUrl = "http://localhost:5000/uflproxy/";
-const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
+const UflUrl = "http://127.0.0.1:5000/uflproxy/";
+const UFL_API_KEY= "1016~wBvJuFEbY60UyPeJ2lSDGVQqB3hOh0SNA65DNHQ5GCc4Jd2d9ZcfS521GEb9kfDJ"
+//const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
 
 async function fetchCourses() {
   try {
@@ -91,6 +92,8 @@ async function fetchQuizzes(courseId) {
   return validQuizzes;
 }
 
+
+
 /**
  * @param {any} courseId
  */
@@ -167,10 +170,9 @@ async function fetchAll() {
   }
 }
 
-export {
+module.exports = {
   fetchCourses,
   fetchCourseTasks,
   fetchCourseFiles,
-  fetchCourse,
   fetchAll,
-};
+}

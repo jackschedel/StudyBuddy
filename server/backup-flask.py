@@ -25,6 +25,51 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 PINECONE_ENV = "northamerica-northeast1-gcp"
 tokenizer = tiktoken.get_encoding('cl100k_base')
 
+@app.route('/upload_from_url', methods=['POST'])
+def upload_from_url():
+    try:
+        data = request.json
+        pdf_url = data.get("url")
+        if not pdf_url or not pdf_url.endswith(".pdf"):
+            return jsonify({"error": "Invalid URL or not a PDF"}), 400
+
+        # Fetch the content of the PDF
+        response = requests.get(pdf_url)
+        if response.status_code != 200:
+            return jsonify({"error": "Failed to fetch the PDF"}), 400
+
+        # Generate a unique filename based on the fetched content
+        content_hash = hashlib.md5(response.content).hexdigest()
+        filename = f"{content_hash}.pdf"
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+
+        # Save the fetched content to a local file
+        with open(filepath, 'wb') as f:
+            f.write(response.content)
+
+        # Process the saved PDF file as done currently in the /upload endpoint
+        extracted_text = extract_text(filepath)
+
+        # Transform extracted text to JSONL format
+        jsonl_data = transform_to_jsonl(extracted_text)
+
+        # Tokenize the JSONL data
+        tokenized_data = tokenize_text(jsonl_data)
+
+        # Upload tokenized data to Pinecone
+        upload_to_pinecone(tokenized_data)
+
+        os.remove(filepath)
+        logging.info(f"File {filename} fetched from URL and uploaded to Pinecone successfully.")
+        return jsonify({"message": "Uploaded successfully!"}), 200
+
+    except Exception as e:
+        logging.error(f"Error processing file fetched from URL {pdf_url}: {e}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
+
+#OLD UPLOAD CODE BELOW
+
+
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf', 'mp4'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
