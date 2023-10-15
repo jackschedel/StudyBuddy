@@ -6,7 +6,8 @@ export interface ContextDocument{
   doc_type: DocumentType;
   name: string;
   url: string;
-}
+  text: string;
+  }
 
 export interface MessageInterface {
   role: Role;

@@ -8,6 +8,7 @@ import {
   fetchCourseTasks,
 } from "../../api/api";
 
+
 const DocumentSelector = () => {
   const [selectedTab, setSelectedTab] = useState<DocumentType>("assignment");
   const { setContextDocument, fetchedCanvasData, setFetchedCanvasData } =
@@ -181,6 +182,7 @@ const SelectorList: React.FC<{
             doc_type: selectedTab,
             name: course.title,
             url: course.html_url,
+            text: "",
           };
         }
       } else {
@@ -189,6 +191,7 @@ const SelectorList: React.FC<{
           doc_type: selectedTab,
           name: course.name ? course.name : course.title,
           url: course.html_url,
+          text: "",
         });
       }
 
@@ -199,14 +202,39 @@ const SelectorList: React.FC<{
       doc_type: selectedTab,
       name: course.display_name,
       url: course.url,
+      text: "",
     }));
   }
 
-  
+
 
   docs = docs.filter(
     (doc: ContextDocument) => doc.name !== undefined && doc.name !== "",
   );
+
+  const nameOverride: string[] = ["2_How to Debug an ARM Program.pdf", "ARMProcedures.pptx", "Quiz 01", "Quiz 03"];
+  const urlOverride: string[] = ["2_How_to_Debug_an_ARM_Program.pdf", "ARMProcedures.pdf", "Quiz_01.html", "Quiz_03.html"];
+
+  docs.forEach((doc, index) => {
+    const overrideIndex = nameOverride.indexOf(doc.name);
+    if (overrideIndex !== -1) {
+      doc.url = "http://localhost:3000/assets/" + urlOverride[overrideIndex];
+    }
+  });
+
+  const nameOverride2: string[] = ["Quiz 01", "Quiz 03"];
+  const textOverride: string[] = ["Quiz01.txt", "Quiz03.txt"];
+
+  docs.forEach((doc, index) => {
+    const overrideIndex = nameOverride2.indexOf(doc.name);
+    if (overrideIndex !== -1) {
+      fetch('/assets/' + textOverride[overrideIndex])
+        .then(response => response.text())
+        .then(data => {
+          doc.text = data;
+        });
+    }
+  });
 
   return (
     <div className="w-full h-full flex flex-col text-white overflow-y-auto">

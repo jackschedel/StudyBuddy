@@ -1,17 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../../hooks/AppContext";
 import { ContextDocument, DocumentType } from "@src/types";
-import { Document, Page } from "react-pdf";
+import { Document, Page, pdfjs } from "react-pdf";
 import { uploadFromUrl } from "../../api/api";
 
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
 const DocumentBox = () => {
-  const { contextDocument, setContextDocument } = useAppContext();
-  useState<ContextDocument | null>(null);
+  const { contextDocument, setContextDocument, setDocText, docText } = useAppContext();
   const [numPages, setNumPages] = useState(0);
+  const [text, setText] = useState("");
 
   useEffect(() => {
-    callFetchData();
+    //callFetchData();
   }, [contextDocument]);
+
+  useEffect(() => {
+    console.log("Document Text: ", docText);
+  }, [docText]);
 
   if (!contextDocument) {
     return (
@@ -22,11 +28,34 @@ const DocumentBox = () => {
   }
 
   const isPdf =
-    contextDocument.url.startsWith("http://127.0.0.1");
+    contextDocument.url.startsWith("http://localhost:") && contextDocument.url.endsWith(".pdf");
 
-  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
-    setNumPages(numPages);
+    const isHtml =
+    contextDocument.url.startsWith("http://localhost:") && contextDocument.url.endsWith(".html");
+
+
+    async function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+      setNumPages(numPages);
+      if (contextDocument) {
+          pdfjs.getDocument(contextDocument.url).promise.then(pdf => {
+              let text = "";
+              for(let i = 1; i <= numPages; i++) {
+                  pdf.getPage(i).then(page => {
+                      page.getTextContent().then(textContent => {
+                          for(let item of textContent.items) {
+                              if ('str' in item) {
+                                  text += item.str + " ";
+                              }
+                          }
+                          setText(text);
+                          setDocText(text);
+                      });
+                  });
+              }
+          });
+      }
   }
+
 
   async function callFetchData() {
     if (
@@ -45,7 +74,7 @@ const DocumentBox = () => {
   }
 
   return (
-    <div className="w-full h-full bg-gray-100 flex flex-col justify-start items-center text-black p-2">
+<div className="w-full h-full bg-gray-100 flex flex-col justify-start items-center text-black p-2">
       <h1 className="text-4xl pt-1 pb-2">{contextDocument.name}</h1>
       <div className="flex justify-center items-center w-full h-full overflow-hidden">
         {isPdf ? (
@@ -62,6 +91,7 @@ const DocumentBox = () => {
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
                   className="absolute left-1/2 transform -translate-x-1/2"
+                  scale={0.7}
                 />,
                 numPages > 1 && index < numPages - 1 ? (
                   <div className="h-2" key={`divider_${index + 1}`}></div>
@@ -69,6 +99,11 @@ const DocumentBox = () => {
               ]).reduce((prev, curr) => prev.concat(curr), [])}
             </Document>
           </div>
+        ) : isHtml ? (
+          <iframe
+            src={contextDocument.url}
+            className="self-center w-full h-full overflow-auto"
+          />
         ) : (
           <p className="self-center overflow-auto">
             ContextDocumentURL: {contextDocument.url}
