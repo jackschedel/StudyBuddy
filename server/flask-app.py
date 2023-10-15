@@ -193,14 +193,22 @@ def tokenize_text(docs):
 
 index_name = 'rag-testing'
 
-def initialize_pinecone():
-    pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
-    if index_name not in pinecone.list_indexes():
-        pinecone.create_index(
-            name=index_name,
-            metric='dotproduct',
-            dimension=1536  # 1536 dim of text-embedding-ada-002
-        )
+@app.route('/init_pinecone', methods=['POST'])
+def init_pinecone():
+    try:
+        data = request.json
+        pinecone_api_key = data.get("pinecone_api_key", "")
+        pinecone.init(api_key=pinecone_api_key, environment=PINECONE_ENV)
+        if index_name not in pinecone.list_indexes():
+            pinecone.create_index(
+                name=index_name,
+                metric='dotproduct',
+                dimension=1536  # 1536 dim of text-embedding-ada-002
+            )
+        return jsonify({"message": "Pinecone initialized successfully"})
+    except Exception as e:
+        logging.error(f"Error initializing Pinecone: {e}")
+        return jsonify({"error": "An unexpected error occurred initializing Pinecone"}), 500
 
 embed = OpenAIEmbeddings(model='text-embedding-ada-002', openai_api_key=OPENAI_API_KEY)
 
@@ -224,8 +232,6 @@ def upload_to_pinecone(df):
     except Exception as e:
         logging.error(f"Error uploading to Pinecone: {e}")
         raise
-
-initialize_pinecone()
 
 text_field = "text"
 index = pinecone.Index(index_name)

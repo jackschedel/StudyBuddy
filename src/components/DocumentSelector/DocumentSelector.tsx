@@ -6,6 +6,7 @@ import {
   fetchCourseFiles,
   fetchCourses,
   fetchCourseTasks,
+  initializePinecone,
 } from "../../api/api";
 
 const DocumentSelector = () => {
@@ -14,6 +15,16 @@ const DocumentSelector = () => {
     useAppContext();
   const [selectedCourseId, setSelectedCourseId] = useState<null | number>(null);
   const [courseData, setCourseData] = useState<any[]>([]);
+
+  async function pineconeInit() {
+    try {
+      const data = await initializePinecone();
+    } catch (error) {
+      console.log("Pinecone init error:", error);
+    }
+  }
+
+  pineconeInit();
 
   async function callFetchAllData() {
     try {
@@ -202,7 +213,9 @@ const SelectorList: React.FC<{
     }));
   }
 
-  docs = docs.filter((doc: ContextDocument) => doc.name !== undefined && doc.name !== "");
+  docs = docs.filter(
+    (doc: ContextDocument) => doc.name !== undefined && doc.name !== "",
+  );
 
   return (
     <div className="w-full h-full flex flex-col text-white">

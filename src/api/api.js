@@ -1,5 +1,27 @@
-const UflUrl = "http://127.0.0.1:5000/uflproxy/";
+const ServerUrl = "http://127.0.0.1:5000/";
+const UflUrl = `${ServerUrl}uflproxy/`;
 const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
+const OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "noApiKey";
+const PINECONE_API_KEY = localStorage.getItem("pinecone_api_key") || "noApiKey";
+
+
+async function initializePinecone() {
+  try {
+    const response = await fetch(`${ServerUrl}init_pinecone`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        pinecone_api_key: PINECONE_API_KEY,
+      })
+    });
+    const data = await response.json();
+    console.log(data.message);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 async function fetchCourses() {
   try {
@@ -166,4 +188,5 @@ module.exports = {
   fetchCourseTasks,
   fetchCourseFiles,
   fetchAll,
+  initializePinecone,
 };
