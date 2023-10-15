@@ -3,7 +3,7 @@ import { useAppContext } from "../../hooks/AppContext";
 import { generateQuestions } from "../../api/api";
 
 const ResponseBox = () => {
-  const { chatArray, contextDocument, docText } = useAppContext();
+  const { chatArray, contextDocument, docText, setChatArray } = useAppContext();
   const [typing, setTyping] = useState("");
   const typingAnimation = [".", "..", "...", " ..", "  .", ""];
   const [q1, sq1] = useState("");
@@ -21,6 +21,8 @@ const ResponseBox = () => {
   }
 
   useEffect(() => {
+    setChatArray([]);
+
     if (contextDocument) {
       generateQuestionsFromDoc();
     }

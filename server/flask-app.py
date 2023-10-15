@@ -317,8 +317,13 @@ def query_documnent_question():
         data = request.json
         document_text = data.get("document_text", "")
         request_question = data.get("question", "")
-        query = document_text + "\n\n---------\n\n Answer the following question as an academic tutor \n\n---------\n\n" + request_question
+        query = document_text + "\n\n---------\n\n Answer the following question regarding the above document as an academic tutor. Do not query your knowledge base. \n\n---------\n\n" + request_question
         response = agent(query)
+
+        app.logger.info(f'TestHere: {response}')
+
+        if isinstance(response, HumanMessage):
+            return jsonify({"response": str(response.output)})
         if isinstance(response, dict):  # If response is a dictionary
             return jsonify({"response": response})
         else:  # If response is not a dictionary

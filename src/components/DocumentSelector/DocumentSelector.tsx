@@ -226,9 +226,9 @@ const SelectorList: React.FC<{
   const textOverride: string[] = ["Quiz01.txt", "Quiz03.txt"];
 
   docs.forEach((doc, index) => {
-    const overrideIndex = nameOverride2.indexOf(doc.name);
-    if (overrideIndex !== -1) {
-      fetch('/assets/' + textOverride[overrideIndex])
+    const overrideIndex2 = nameOverride2.indexOf(doc.name);
+    if (overrideIndex2 !== -1) {
+      fetch('http://localhost:3000/assets/' + textOverride[overrideIndex2])
         .then(response => response.text())
         .then(data => {
           doc.text = data;
