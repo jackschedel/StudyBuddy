@@ -27,4 +27,4 @@ def proxy(subpath):
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-    app.run(port=5000)
+    app.run(port=5000, threaded=True)

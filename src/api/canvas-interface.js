@@ -37,9 +37,7 @@ async function fetchAssignments(courseId) {
         validAssignments.push(assignment);
       }
     }
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
   return validAssignments;
 }
 
@@ -85,9 +83,7 @@ async function fetchQuizzes(courseId) {
         validQuizzes.push(quiz);
       }
     }
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
   return validQuizzes;
 }
 
@@ -114,9 +110,7 @@ async function fetchCourseFiles(courseId) {
         if (ext == ".pdf" || ext == "pptx") files.push(file);
       }
     }
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
   return files;
 }
 

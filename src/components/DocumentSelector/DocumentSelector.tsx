@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
 import { ContextDocument, DocumentType } from "@src/types";
 import {
+  fetchAll,
   fetchCourseFiles,
   fetchCourses,
   fetchCourseTasks,
@@ -9,9 +10,24 @@ import {
 
 const DocumentSelector = () => {
   const [selectedTab, setSelectedTab] = useState<DocumentType>("assignment");
-  const { setContextDocument } = useAppContext();
+  const { setContextDocument, fetchedCanvasData, setFetchedCanvasData } =
+    useAppContext();
   const [selectedCourseId, setSelectedCourseId] = useState<null | number>(null);
   const [courseData, setCourseData] = useState<any[]>([]);
+
+  async function callFetchAllData() {
+    try {
+      const data = await fetchAll();
+      setFetchedCanvasData(data);
+    } catch (error) {
+      console.log("Fetch-all Error:", error);
+    }
+  }
+
+  // todo refactor to use fetchedCanvasData if non-null
+  // if (!fetchedCanvasData) {
+  //   callFetchAllData();
+  // }
 
   const handleDocumentSelection = (doc: ContextDocument) => {
     setContextDocument(doc);
@@ -30,11 +46,18 @@ const DocumentSelector = () => {
     callFetchData();
   }, []);
 
+
   useEffect(() => {
-    console.log(selectedCourseId);
+    console.log("fetchAll result:");
+    console.log(fetchedCanvasData);
+  }, [fetchedCanvasData]);
+
+  useEffect(() => {
+    console.log("course id: " + selectedCourseId);
   }, [selectedCourseId]);
 
   useEffect(() => {
+    console.log("course data:");
     console.log(courseData);
   }, [courseData]);
 
