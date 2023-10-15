@@ -22,8 +22,7 @@ const DocumentBox = () => {
   }
 
   const isPdf =
-    contextDocument.doc_type == "assignment" &&
-    contextDocument.url.startsWith("http://localhost");
+    contextDocument.url.startsWith("http://127.0.0.1");
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
@@ -32,12 +31,13 @@ const DocumentBox = () => {
   async function callFetchData() {
     if (
       contextDocument?.url &&
-      !contextDocument.url.startsWith("http://localhost")
+      !contextDocument.url.startsWith("http://127.0.0.1")
     ) {
       try {
         const data = await uploadFromUrl(contextDocument.url);
         console.log(data);
-        setContextDocument({ ...contextDocument, url: data.pdf_url });
+        let newUrl = data.pdf_url.replace('http://localhost', 'http://127.0.0.1');
+        setContextDocument({ ...contextDocument, url: newUrl });
       } catch (error) {
         console.log("Fetch Error:", error);
       }

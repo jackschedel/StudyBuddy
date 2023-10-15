@@ -20,7 +20,7 @@ from langchain.agents import initialize_agent
 from tqdm.auto import tqdm
 import pinecone
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
@@ -40,8 +40,11 @@ class HumanMessage:
             "message": self.message
         }
 
-@app.route('/static/<path:filename>')
+@app.route('/static/<path:filename>', methods=['GET'])
 def static_files(filename):
+    filepath = os.path.join(app.root_path, 'static', filename)
+    print(f"File path: {filepath}")
+    logging.info(f"{filepath}")
     return send_from_directory(app.root_path + '/static/', filename)
 
 @app.route('/upload_from_url', methods=['POST'])
