@@ -202,6 +202,8 @@ const SelectorList: React.FC<{
     }));
   }
 
+  
+
   docs = docs.filter(
     (doc: ContextDocument) => doc.name !== undefined && doc.name !== "",
   );

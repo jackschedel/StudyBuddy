@@ -4,7 +4,7 @@ import { generateQuestions, queryDocumentQuestion } from "../../api/api";
 import { ContextDocument, DocumentType } from "@src/types";
 
 const UserMessageBox = () => {
-  const { appendChatArray, contextDocument, chatArray } = useAppContext();
+  const { appendChatArray, contextDocument, chatArray, docText } = useAppContext();
   const [text, setText] = useState("");
   useState<ContextDocument | null>(null);
 
@@ -41,12 +41,9 @@ const UserMessageBox = () => {
     [handleSubmit],
   );
 
-  const documentText =
-    "Why learn data analytics and machine learning? Businesses today often use data to solve complex problems. A business that ignores the data it generates is at a significant disadvantage.";
-
   async function askDocumentQuestion() {
     try {
-      const data = await queryDocumentQuestion(documentText, text);
+      const data = await queryDocumentQuestion(docText, text);
       console.log(data.response);
       appendChatArray(data.response.output);
     } catch (error) {
@@ -54,22 +51,11 @@ const UserMessageBox = () => {
     }
   }
 
-  async function generateQuestionsFromDoc() {
-    try {
-      const data = await generateQuestions(documentText);
-      console.log(data);
-    } catch (error) {
-      console.log("query agent error:", error);
-    }
-  }
+
 
   //generateQuestionsFromDoc();
 
-  useEffect(() => {
-    if (contextDocument) {
-      generateQuestionsFromDoc();
-    }
-  }, [contextDocument]);
+
 
   return (
     <div

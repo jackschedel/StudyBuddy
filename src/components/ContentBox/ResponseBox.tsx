@@ -1,10 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
+import { generateQuestions } from "../../api/api";
 
 const ResponseBox = () => {
-  const { chatArray, contextDocument } = useAppContext();
+  const { chatArray, contextDocument, docText } = useAppContext();
   const [typing, setTyping] = useState("");
   const typingAnimation = [".", "..", "...", " ..", "  .", ""];
+  const [q1, sq1] = useState("");
+  const [q2, sq2] = useState("");
+  const [q3, sq3] = useState("");
+  const [q4, sq4] = useState("");
+
+  async function generateQuestionsFromDoc() {
+    try {
+      const data = await generateQuestions(docText);
+      console.log(data);
+    } catch (error) {
+      console.log("query agent error:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (contextDocument) {
+      generateQuestionsFromDoc();
+    }
+  }, [contextDocument]);
 
   useEffect(() => {
     let index = 0;
@@ -23,19 +43,19 @@ const ResponseBox = () => {
     <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 rounded-lg m-1 h-auto text-left mx-5`}>
         {!contextDocument ? 'Select a document to begin.' : 'Ask a question about the current document or pick a quick-action.'}
     </p>
-    {chatArray.length === 0 && contextDocument ? (
+    {false && chatArray.length === 0 && contextDocument ? (
       <div>
     <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 mt-56 my-5 h-auto text-left mx-5`}>
-    {'quick action 1'}
+    {q1}
     </p>
     <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}>
-    {'quick action 2'}
+    {q2}
     </p>
     <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}>
-    {'quick action 2'}
+    {q3}
     </p>
     <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}>
-    {'quick action 3'}
+    {q4}
     </p>
     </div>
 
