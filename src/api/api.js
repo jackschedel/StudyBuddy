@@ -77,6 +77,9 @@ async function fetchCourses() {
     console.log(error);
   }
 }
+/**
+ * @param {any} courseId
+ */
 async function fetchAnnouncements(courseId) { // returns list of pure announcement strings (no objects)
   try {
     const response = await fetch(`${UflUrl}api/v1/announcements?context_codes[]=course_${courseId}`, {

@@ -46,7 +46,7 @@ def upload_from_url():
             return jsonify({"error": "Invalid URL or not a PDF"}), 400
 
         # Fetch the content of the PDF
-        response = requests.get(pdf_url)
+        response = requests.get(pdf_url, allow_redirects=True)
         if response.status_code != 200:
             return jsonify({"error": "Failed to fetch the PDF"}), 400
 
