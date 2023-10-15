@@ -46,7 +46,6 @@ const DocumentSelector = () => {
     callFetchData();
   }, []);
 
-
   useEffect(() => {
     console.log("fetchAll result:");
     console.log(fetchedCanvasData);
@@ -94,7 +93,11 @@ const DocumentSelector = () => {
         <div className="flex h-1/8 items-center justify-center">
           <div className="flex w-1/2 justify-center">
             <button
-              className="bg-gray-600 hover:bg-gray-800 text-white py-3 rounded m-1 flex-grow"
+              className={`${
+                selectedTab === "assignment"
+                  ? "bg-gray-900 hover:bg-gray-800"
+                  : "bg-gray-600 hover:bg-gray-500"
+              } text-white py-3 rounded m-1 flex-grow`}
               onClick={() => setSelectedTab("assignment")}
             >
               Assignments
@@ -102,7 +105,11 @@ const DocumentSelector = () => {
           </div>
           <div className="flex w-1/2 justify-center">
             <button
-              className="bg-gray-600 hover:bg-gray-800 text-white py-3 rounded m-1 flex-grow"
+              className={`${
+                selectedTab === "lecture"
+                  ? "bg-gray-900 hover:bg-gray-800"
+                  : "bg-gray-600 hover:bg-gray-500"
+              } text-white py-3 rounded m-1 flex-grow`}
               onClick={() => setSelectedTab("lecture")}
             >
               Materials
@@ -194,6 +201,8 @@ const SelectorList: React.FC<{
       url: course.url,
     }));
   }
+
+  docs = docs.filter((doc: ContextDocument) => doc.name !== undefined && doc.name !== "");
 
   return (
     <div className="w-full h-full flex flex-col text-white">
