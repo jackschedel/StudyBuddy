@@ -6,7 +6,6 @@ import {
   fetchCourseFiles,
   fetchCourses,
   fetchCourseTasks,
-  initializePinecone,
 } from "../../api/api";
 
 const DocumentSelector = () => {

@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
-import { generateQuestions } from "../../api/api";
+import { generateQuestions, queryDocumentQuestion } from "../../api/api";
 import { ContextDocument, DocumentType } from "@src/types";
 
 const UserMessageBox = () => {
@@ -11,6 +11,7 @@ const UserMessageBox = () => {
   const handleSubmit = useCallback(() => {
     if (text.trim() !== "") {
       appendChatArray(text);
+      askDocumentQuestion();
       setText("");
     }
   }, [text, appendChatArray]);
@@ -32,18 +33,28 @@ const UserMessageBox = () => {
     [handleSubmit],
   );
 
+  const documentText = "Why learn data analytics and machine learning? Businesses today often use data to solve complex problems. A business that ignores the data it generates is at a significant disadvantage.";
+
+  async function askDocumentQuestion() {
+    try {
+      const data = await queryDocumentQuestion(documentText, text);
+      console.log(data.response)
+      appendChatArray(data.response.output);
+    } catch (error) {
+      console.log("query agent error:", error);
+    }
+  }
+
   async function generateQuestionsFromDoc() {
     try {
-      const data = await generateQuestions(
-        "Why learn data analytics and machine learning? Businesses today often use data to solve complex problems. A business that ignores the data it generates is at a significant disadvantage. The skills required to",
-      );
+      const data = await generateQuestions(documentText);
       console.log(data);
     } catch (error) {
       console.log("query agent error:", error);
     }
   }
 
-  generateQuestionsFromDoc();
+  //generateQuestionsFromDoc();
 
   useEffect(() => {
     if (contextDocument) {

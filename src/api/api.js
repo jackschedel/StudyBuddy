@@ -24,6 +24,29 @@ async function generateQuestions(documentText) {
   }
 }
 
+/**
+ * @param {any} documentText
+ * @param {any} queryQuestion
+ */
+async function queryDocumentQuestion(documentText, queryQuestion) {
+  try {
+    const response = await fetch(`${ServerUrl}query_documnent_question`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        document_text: `${documentText}`,
+        question: `${queryQuestion}`,
+      }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// not working
 async function initializePinecone() {
   try {
     const response = await fetch(`${ServerUrl}init_pinecone`, {
@@ -208,4 +231,5 @@ module.exports = {
   fetchAll,
   initializePinecone,
   generateQuestions,
+  queryDocumentQuestion,
 };

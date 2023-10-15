@@ -24,6 +24,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 PINECONE_ENV = "northamerica-northeast1-gcp"
 tokenizer = tiktoken.get_encoding('cl100k_base')
 
@@ -201,22 +202,14 @@ def tokenize_text(docs):
 
 index_name = 'rag-testing'
 
-@app.route('/init_pinecone', methods=['POST'])
-def init_pinecone():
-    try:
-        data = request.json
-        pinecone_api_key = data.get("pinecone_api_key", "")
-        pinecone.init(api_key=pinecone_api_key, environment=PINECONE_ENV)
-        if index_name not in pinecone.list_indexes():
-            pinecone.create_index(
-                name=index_name,
-                metric='dotproduct',
-                dimension=1536  # 1536 dim of text-embedding-ada-002
-            )
-        return jsonify({"message": "Pinecone initialized successfully"})
-    except Exception as e:
-        logging.error(f"Error initializing Pinecone: {e}")
-        return jsonify({"error": "An unexpected error occurred initializing Pinecone"}), 500
+pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
+if index_name not in pinecone.list_indexes():
+    pinecone.create_index(
+        name=index_name,
+        metric='dotproduct',
+        dimension=1536  # 1536 dim of text-embedding-ada-002
+    )
+
 
 embed = OpenAIEmbeddings(model='text-embedding-ada-002', openai_api_key=OPENAI_API_KEY)
 
@@ -294,6 +287,28 @@ def generate_questions():
         response = response.removeprefix("Could not parse LLM output: ")
         response_lines = response.split('\n')
         return jsonify({"response": response_lines})
+    except Exception as e:
+        logging.error(f"Error querying agent: {e}")
+        return jsonify({"error": "An unexpected error occurred querying the agent"}), 500
+
+@app.route('/query_documnent_question', methods=['POST'])
+def query_documnent_question():
+    try:
+        data = request.json
+        document_text = data.get("document_text", "")
+        request_question = data.get("question", "")
+        query = document_text + "\n\n---------\n\n Answer the following question as an academic tutor \n\n---------\n\n" + request_question
+        response = agent(query)
+        if isinstance(response, dict):  # If response is a dictionary
+            return jsonify({"response": response})
+        else:  # If response is not a dictionary
+            return jsonify({"response": str(response)})
+    except ValueError as e:
+        response = str(e)
+        if not response.startswith("Could not parse LLM output: "):
+            logging.error(f"Error querying agent: {e}")
+        response = response.removeprefix("Could not parse LLM output: ")
+        return jsonify({"response": response})
     except Exception as e:
         logging.error(f"Error querying agent: {e}")
         return jsonify({"error": "An unexpected error occurred querying the agent"}), 500

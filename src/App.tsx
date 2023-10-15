@@ -6,22 +6,9 @@ import ContentBox from "./components/ContentBox";
 import UserMessageBox from "./components/UserMessageBox";
 import DocumentSelector from "./components/DocumentSelector";
 import MiscBox from "./components/MiscBox";
-import { initializePinecone } from "./api/api";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
 function App() {
-  async function pineconeInit() {
-    try {
-      const data = await initializePinecone();
-      console.log(data.message);
-    } catch (error) {
-      console.log("Pinecone init error:", error);
-    }
-  }
-
-  pineconeInit();
-
   return (
     <ContextProvider>
       <div className="App flex w-full h-screen">
