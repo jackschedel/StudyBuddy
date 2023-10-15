@@ -4,21 +4,21 @@ const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
 const OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "noApiKey";
 const PINECONE_API_KEY = localStorage.getItem("pinecone_api_key") || "noApiKey";
 
-async function queryAgent() {
+/**
+ * @param {any} documentText
+ */
+async function generateQuestions(documentText) {
   try {
-    const response = await fetch(`${ServerUrl}query_agent`, {
+    const response = await fetch(`${ServerUrl}generate_questions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        query: "this is a test. please respond.",
+        document_text: `${documentText}`,
       }),
     });
-    const data = await response.json();
-
-    console.log("agent query:");
-    console.log(data.message);
+    return await response.json();
   } catch (error) {
     console.error(error);
   }
@@ -35,8 +35,7 @@ async function initializePinecone() {
         pinecone_api_key: PINECONE_API_KEY,
       })
     });
-    const data = await response.json();
-    console.log(data.message);
+    return await response.json();
   } catch (error) {
     console.error(error);
   }
@@ -208,5 +207,5 @@ module.exports = {
   fetchCourseFiles,
   fetchAll,
   initializePinecone,
-  queryAgent,
+  generateQuestions,
 };

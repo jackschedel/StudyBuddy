@@ -1,9 +1,12 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
+import { generateQuestions } from "../../api/api";
+import { ContextDocument, DocumentType } from "@src/types";
 
 const UserMessageBox = () => {
-  const { appendChatArray } = useAppContext();
+  const { appendChatArray, contextDocument } = useAppContext();
   const [text, setText] = useState("");
+  useState<ContextDocument | null>(null);
 
   const handleSubmit = useCallback(() => {
     if (text.trim() !== "") {
@@ -21,13 +24,32 @@ const UserMessageBox = () => {
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
-      if (event.key === 'Enter' && !event.shiftKey) {
+      if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         handleSubmit();
       }
     },
     [handleSubmit],
   );
+
+  async function generateQuestionsFromDoc() {
+    try {
+      const data = await generateQuestions(
+        "Why learn data analytics and machine learning? Businesses today often use data to solve complex problems. A business that ignores the data it generates is at a significant disadvantage. The skills required to",
+      );
+      console.log(data);
+    } catch (error) {
+      console.log("query agent error:", error);
+    }
+  }
+
+  generateQuestionsFromDoc();
+
+  useEffect(() => {
+    if (contextDocument) {
+      generateQuestionsFromDoc();
+    }
+  }, [contextDocument]);
 
   return (
     <div className="w-full h-full flex items-center justify-center p-4">

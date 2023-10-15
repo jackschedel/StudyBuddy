@@ -27,6 +27,15 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 PINECONE_ENV = "northamerica-northeast1-gcp"
 tokenizer = tiktoken.get_encoding('cl100k_base')
 
+class HumanMessage:
+    def __init__(self, message):
+        self.message = message
+
+    def to_dict(self):
+        return {
+            "message": self.message
+        }
+
 @app.route('/upload_from_url', methods=['POST'])
 def upload_from_url():
     try:
@@ -270,14 +279,21 @@ agent = initialize_agent(
     memory=conversational_memory
 )
 
-# [New Endpoint for Agent]
-@app.route('/query_agent', methods=['POST'])
-def query_agent():
+@app.route('/generate_questions', methods=['POST'])
+def generate_questions():
     try:
         data = request.json
-        query = data.get("query", "")
+        document_text = data.get("document_text", "")
+        query = document_text + "\n\n\n---------\n\n\n\nList 4 very short, simple content-based questions that a student could ask regarding the above document. The response should be just the questions, seperated by only a new line, with no question numbers or -'s."
         response = agent(query)
         return jsonify({"response": response})
+    except ValueError as e:
+        response = str(e)
+        if not response.startswith("Could not parse LLM output: "):
+            logging.error(f"Error querying agent: {e}")
+        response = response.removeprefix("Could not parse LLM output: ")
+        response_lines = response.split('\n')
+        return jsonify({"response": response_lines})
     except Exception as e:
         logging.error(f"Error querying agent: {e}")
         return jsonify({"error": "An unexpected error occurred querying the agent"}), 500
