@@ -6,7 +6,7 @@ import ContentBox from "./components/ContentBox";
 import UserMessageBox from "./components/UserMessageBox";
 import DocumentSelector from "./components/DocumentSelector";
 import MiscBox from "./components/MiscBox";
-import { initializePinecone } from "./api/api";
+import { initializePinecone, queryAgent } from "./api/api";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -19,7 +19,17 @@ function App() {
     }
   }
 
+  async function fetchQueryAgent() {
+    try {
+      await queryAgent();
+    } catch (error) {
+      console.log("query agent error:", error);
+    }
+  }
+
   pineconeInit();
+
+  fetchQueryAgent();
 
   return (
     <ContextProvider>

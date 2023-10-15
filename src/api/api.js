@@ -189,4 +189,5 @@ module.exports = {
   fetchCourseFiles,
   fetchAll,
   initializePinecone,
+  queryAgent,
 };
