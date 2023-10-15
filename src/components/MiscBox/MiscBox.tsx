@@ -121,7 +121,7 @@ const MiscBox = () => {
   };
 
   return (
-    <div className="w-full h-full border-2 flex items-center justify-center text-white">
+    <div className="w-full h-full border flex items-center justify-center text-white">
       <button
         onClick={handleSettingsButton}
         className="bg-gray-600 hover:bg-gray-800 text-white font-bold py-4 px-6 rounded"

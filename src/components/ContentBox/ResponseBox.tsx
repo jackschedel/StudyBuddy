@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
 
 const ResponseBox = () => {
-  const { chatArray } = useAppContext();
+  const { chatArray, contextDocument } = useAppContext();
   const [typing, setTyping] = useState("");
   const typingAnimation = [".", "..", "...", " ..", "  .", ""];
 
@@ -17,31 +17,56 @@ const ResponseBox = () => {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col text-white">
+<div className="w-full h-full flex flex-col text-white pt-4">
+      {(chatArray.length === 0 || !contextDocument) ? (
+        <div className="">
+    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 rounded-lg m-1 h-auto text-left mx-5`}>
+        {!contextDocument ? 'Select a document to begin.' : 'Ask a question about the current document or pick a quick-action.'}
+    </p>
+    {chatArray.length === 0 && contextDocument ? (
       <div>
-        {chatArray.map((str, index) => (
-          <p
-            key={index}
-            className={`bg-gray-100 border border-gray-500 text-black p-3 rounded-xl m-1 h-auto text-left m-2 ${
-              index % 2 === 0 ? "ml-10" : "mr-10"
-            }`}
-          >
-            {str.split("\n").map((line, i) => (
-              <span key={i}>
-                {line}
-                <br />
-              </span>
-            ))}
-          </p>
-        ))}
-        {chatArray.length % 2 === 1 && (
-          <p
-          className={`bg-gray-100 border border-gray-500 text-black p-3 rounded-xl m-1 h-auto text-left m-2 mr-10
-          `}          >
-          {typing || '\u00A0'}
-          </p>
-        )}
-      </div>
+    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 mt-56 my-5 h-auto text-left mx-5`}>
+    {'quick action 1'}
+    </p>
+    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}>
+    {'quick action 2'}
+    </p>
+    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}>
+    {'quick action 2'}
+    </p>
+    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}>
+    {'quick action 3'}
+    </p>
+    </div>
+
+) : null}
+</div>
+      ) : (
+        <div>
+          {chatArray.map((str, index) => (
+            <p
+              key={index}
+              className={`bg-gray-100 border border-gray-500 text-black p-3 rounded-l-xl  rounded-r-lg m-1 h-auto text-left m-2 ${
+                index % 2 === 0 ? "ml-10" : "mr-10"
+              }`}
+            >
+              {str.split("\n").map((line, i) => (
+                <span key={i}>
+                  {line}
+                  <br />
+                </span>
+              ))}
+            </p>
+          ))}
+          {chatArray.length % 2 === 1 && (
+            <p
+            className={`bg-gray-100 border border-gray-500 text-black p-3 rounded-r-xl rounded-l-lg m-1 h-auto text-left m-2 mr-10
+            `}          >
+            {typing || '\u00A0'}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

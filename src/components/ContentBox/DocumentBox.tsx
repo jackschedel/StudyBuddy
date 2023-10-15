@@ -15,8 +15,8 @@ const DocumentBox = () => {
 
   if (!contextDocument) {
     return (
-      <div className="w-full h-full bg-gray-100 flex items-center justify-center text-black">
-        <h1 className="text-4xl">No Document Selected</h1>
+      <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
+        <h1 className="text-2xl">No Document Selected</h1>
       </div>
     );
   }

@@ -221,8 +221,8 @@ const SelectorList: React.FC<{
           <button
             key={doc.name}
             onClick={() => handleDocumentSelection(doc)}
-            className="bg-gray-200 border border-gray-400 hover:bg-gray-300 hover:border-gray-600 text-black py-3 m-1 w-full"
-          >
+            className="bg-gray-200 border border-gray-400 hover:bg-gray-300 hover:border-gray-600 text-black px=1 py-1 m-1 w-full text-sm"
+            >
             {doc.name}
           </button>
         ))
