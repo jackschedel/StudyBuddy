@@ -53,11 +53,19 @@ def upload_from_url():
         # Generate a unique filename based on the fetched content
         content_hash = hashlib.md5(response.content).hexdigest()
         filename = f"{content_hash}.pdf"
+        
+        # Check if UPLOAD_FOLDER exists and create if it doesn't
+        if not os.path.exists(UPLOAD_FOLDER):
+            os.makedirs(UPLOAD_FOLDER)
         filepath = os.path.join(UPLOAD_FOLDER, filename)
 
         # Save the fetched content to a local file
-        with open(filepath, 'wb') as f:
-            f.write(response.content)
+        try:
+            with open(filepath, 'wb') as f:
+                f.write(response.content)
+        except Exception as e:
+            logging.error(f"Error saving file to {filepath}: {e}")
+            return jsonify({"error": "Failed to save the PDF"}), 500
 
         # Process the saved PDF file as done currently in the /upload endpoint
         extracted_text = extract_text(filepath)
@@ -74,6 +82,10 @@ def upload_from_url():
         os.remove(filepath)
         logging.info(f"File {filename} fetched from URL and uploaded to Pinecone successfully.")
         return jsonify({"message": "Uploaded successfully!"}), 200
+
+    except Exception as e:
+        logging.error(f"Error processing file fetched from URL {pdf_url}: {e}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
 
     except Exception as e:
         logging.error(f"Error processing file fetched from URL {pdf_url}: {e}")
