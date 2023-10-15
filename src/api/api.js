@@ -77,7 +77,24 @@ async function fetchCourses() {
     console.log(error);
   }
 }
-
+async function fetchAnnouncements(courseId) { // returns list of pure announcement strings (no objects)
+  try {
+    const response = await fetch(`${UflUrl}api/v1/announcements?context_codes[]=course_${courseId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${UFL_API_KEY}`,
+      },
+    });
+    const temp = await response.json();
+    const announcements = []
+    for (var i = 0; i < announcements.length; i++) { 
+      announcements.push(temp[i].message.replace(/<[^>]*>/g, ''));
+    }
+    return announcements;
+  } catch (error) {
+    console.log(error);
+  }
+}
 /**
  * @param {any} courseId
  */
