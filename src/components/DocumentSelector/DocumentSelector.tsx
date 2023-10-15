@@ -6,7 +6,7 @@ import {
   fetchCourseFiles,
   fetchCourses,
   fetchCourseTasks,
-} from "../../api/canvas-interface";
+} from "../../api/api";
 
 const DocumentSelector = () => {
   const [selectedTab, setSelectedTab] = useState<DocumentType>("assignment");
