@@ -23,7 +23,6 @@ import pinecone
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 PINECONE_ENV = "northamerica-northeast1-gcp"
 tokenizer = tiktoken.get_encoding('cl100k_base')

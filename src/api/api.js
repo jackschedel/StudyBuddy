@@ -4,6 +4,25 @@ const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
 const OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "noApiKey";
 const PINECONE_API_KEY = localStorage.getItem("pinecone_api_key") || "noApiKey";
 
+async function queryAgent() {
+  try {
+    const response = await fetch(`${ServerUrl}query_agent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: "this is a test. please respond.",
+      }),
+    });
+    const data = await response.json();
+
+    console.log("agent query:");
+    console.log(data.message);
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 async function initializePinecone() {
   try {
