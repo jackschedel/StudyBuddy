@@ -6,24 +6,24 @@ import ContentBox from "./components/ContentBox";
 import UserMessageBox from "./components/UserMessageBox";
 import DocumentSelector from "./components/DocumentSelector";
 import MiscBox from "./components/MiscBox";
-import { fetchAll } from "./api/canvas-interface";
+import { fetchCourses } from "./api/canvas-interface";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 function App() {
 
-  // useEffect(() => {
-  //   async function callFetchData() {
-  //     try {
-  //       const data = await fetchAll();
-  //       console.log(data);
-  //     } catch (error) {
-  //       console.log("Error:", error);
-  //     }
-  //   }
-  //
-  //   callFetchData();
-  // }, []);
+  useEffect(() => {
+    async function callFetchData() {
+      try {
+        const data = await fetchCourses();
+        console.log("fetchCourses: " + data);
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    }
+
+    callFetchData();
+  }, []);
 
   return (
     <ContextProvider>
