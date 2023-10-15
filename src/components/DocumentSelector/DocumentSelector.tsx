@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
 import { ContextDocument, DocumentType } from "@src/types";
-import { fetchCourses } from "../../api/canvas-interface";
+import {
+  fetchCourseFiles,
+  fetchCourses,
+  fetchCourseTasks,
+} from "../../api/canvas-interface";
 
 const DocumentSelector = () => {
   const [selectedTab, setSelectedTab] = useState<DocumentType>("assignment");
@@ -87,6 +91,7 @@ const DocumentSelector = () => {
           <SelectorList
             selectedTab={selectedTab}
             handleDocumentSelection={handleDocumentSelection}
+            selectedCourseId={selectedCourseId}
           />
         </div>
       </div>
@@ -97,42 +102,86 @@ const DocumentSelector = () => {
 const SelectorList: React.FC<{
   selectedTab: DocumentType;
   handleDocumentSelection: (doc: ContextDocument) => void;
-}> = ({ selectedTab, handleDocumentSelection }) => {
-  const assignmentNames = ["Assignment 1", "Assignment 2", "Assignment 3"];
-  const assignmentUrls = [
-    "aurl1",
-    "https://corsproxy.io/?https://d1mybsg2h91vjj.cloudfront.net/idcKVqRBdKilRtxr-p7pYHsVSWxJtP/file.pdf?versionId=D0rRWpPc1ikJjuRb6nF5hB5QxWkUHRd2&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9kMW15YnNnMmg5MXZqai5jbG91ZGZyb250Lm5ldC9pZGNLVnFSQmRLaWxSdHhyLXA3cFlIc1ZTV3hKdFAvZmlsZS5wZGY~dmVyc2lvbklkPUQwclJXcFBjMWlrSmp1UmI2bkY1aEI1UXhXa1VIUmQyIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNjk3MzE3NTgxfX19XX0_&Key-Pair-Id=K1X4MAECXZ8SUU&Signature=DnE3YRLgL2LvwA~i-6n2g5k7PgC5ok7TTnJduxU4Vv2JJPv-XQ9P6qZGd4uOM77ytsCckBYHQJriwucPt3OKRo4a68zRBtzCRf6wZFth94ysdOD3xUdYhYwnY-5rOoeDvZqtNz38-RAG1gUBfWv5YY2-rbgYaMIuDW08Tv62CO0y7y5JE4G3iJYW-vHAjsC7Nx1knn-JEOqdb2tbYoHfeEW-VoRLeP5Q56TUu9E2Wro-B3Nl-ZloUehp2cS5Ty04sIRj0Bazp9RT9IWHgQETAr9jem8E00bs4lLiVYWvTTt2HEx7ol1JhBNHY2k4ob3mWFiOMIgCFD30KUf9d2CTuA__",
-    "aurl3",
-  ];
+  selectedCourseId: number | null;
+}> = ({ selectedTab, handleDocumentSelection, selectedCourseId }) => {
+  const [courseData, setCourseData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // New state variable
 
-  const lectureNames = ["Lecture 1", "Lecture 2", "Lecture 3", "Lec"];
-  const lectureUrls = ["lurl1", "lurl2", "lurl3", "whatever"];
+  useEffect(() => {
+    async function callFetchData() {
+      setIsLoading(true); // Set loading status to true when fetching data
+      try {
+        let data;
+        data = await fetchCourseTasks(selectedCourseId);
+        if (data) {
+          setCourseData(data);
+        } else {
+          setCourseData([]);
+        }
+      } catch (error) {
+        console.log("Fetch Error:", error);
+      } finally {
+        setIsLoading(false); // Set loading status to false when data is fetched
+      }
+    }
 
-  const assignmentDocs: ContextDocument[] = assignmentNames.map((name, i) => ({
-    doc_type: "assignment",
-    name: name,
-    url: assignmentUrls[i],
-  }));
+    callFetchData();
+  }, [selectedTab, selectedCourseId]);
 
-  const lectureDocs: ContextDocument[] = lectureNames.map((name, i) => ({
-    doc_type: "lecture",
-    name: name,
-    url: lectureUrls[i],
-  }));
+  useEffect(() => {
+    console.log(courseData);
+  }, [courseData]);
 
-  const docs = selectedTab === "lecture" ? lectureDocs : assignmentDocs;
+  const docs: ContextDocument[] = courseData.reduce(
+    (acc: ContextDocument[], course) => {
+      const existingIndex = acc.findIndex(
+        (item) => item.name === (course.name ? course.name : course.title),
+      );
+
+      if (existingIndex !== -1) {
+        if (course.title) {
+          // If the course.title is not null, replace the existing item
+          acc[existingIndex] = {
+            doc_type: selectedTab,
+            name: course.title,
+            url: selectedTab == "lecture" ? "" : course.html_url,
+          };
+        }
+      } else {
+        // If it doesn't exist yet, add to the accumulator
+        acc.push({
+          doc_type: selectedTab,
+          name: course.name ? course.name : course.title,
+          url: selectedTab == "lecture" ? "" : course.html_url,
+        });
+      }
+
+      return acc;
+    },
+    [],
+  );
 
   return (
     <div className="w-full h-full flex flex-col text-white">
-      {docs.map((doc) => (
-        <button
-          key={doc.name}
-          onClick={() => handleDocumentSelection(doc)}
-          className="bg-gray-200 border border-gray-400 hover:bg-gray-300 hover:border-gray-600 text-black py-3 m-1 h-[50px]"
-        >
-          {doc.name}
-        </button>
-      ))}
+      {isLoading || docs.length === 0 ? (
+        <div className="w-full h-full flex items-center justify-center">
+          {isLoading ? (
+            <div className="text-black">Loading...</div>
+          ) : (
+            <div className="text-black">No Items Found.</div>
+          )}
+        </div>
+      ) : (
+        docs.map((doc) => (
+          <button
+            key={doc.name}
+            onClick={() => handleDocumentSelection(doc)}
+            className="bg-gray-200 border border-gray-400 hover:bg-gray-300 hover:border-gray-600 text-black py-3 m-1 w-full"
+          >
+            {doc.name}
+          </button>
+        ))
+      )}
     </div>
   );
 };
