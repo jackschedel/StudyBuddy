@@ -8,21 +8,24 @@ import {
   fetchCourseTasks,
 } from "../../api/api";
 
-
 const DocumentSelector = () => {
   const [selectedTab, setSelectedTab] = useState<DocumentType>("assignment");
-  const { setContextDocument, fetchedCanvasData, setFetchedCanvasData, setChatArray } =
-    useAppContext();
+  const {
+    setContextDocument,
+    fetchedCanvasData,
+    setFetchedCanvasData,
+    setChatArray,
+  } = useAppContext();
   const [selectedCourseId, setSelectedCourseId] = useState<null | number>(null);
   const [courseData, setCourseData] = useState<any[]>([]);
 
   useEffect(() => {
     setChatArray([]);
-  }, [selectedTab])
+  }, [selectedTab]);
 
   useEffect(() => {
     setChatArray([]);
-  }, [selectedCourseId])
+  }, [selectedCourseId]);
 
   async function callFetchAllData() {
     try {
@@ -214,35 +217,9 @@ const SelectorList: React.FC<{
     }));
   }
 
-
-
   docs = docs.filter(
     (doc: ContextDocument) => doc.name !== undefined && doc.name !== "",
   );
-
-  const nameOverride: string[] = ["2_How to Debug an ARM Program.pdf", "ARMProcedures.pptx", "Quiz 01", "Quiz 03"];
-  const urlOverride: string[] = ["2_How_to_Debug_an_ARM_Program.pdf", "ARMProcedures.pdf", "Quiz_01.html", "Quiz_03.html"];
-
-  docs.forEach((doc, index) => {
-    const overrideIndex = nameOverride.indexOf(doc.name);
-    if (overrideIndex !== -1) {
-      doc.url = "http://localhost:3000/assets/" + urlOverride[overrideIndex];
-    }
-  });
-
-  const nameOverride2: string[] = ["Quiz 01", "Quiz 03"];
-  const textOverride: string[] = ["Quiz01.txt", "Quiz03.txt"];
-
-  docs.forEach((doc, index) => {
-    const overrideIndex2 = nameOverride2.indexOf(doc.name);
-    if (overrideIndex2 !== -1) {
-      fetch('http://localhost:3000/assets/' + textOverride[overrideIndex2])
-        .then(response => response.text())
-        .then(data => {
-          doc.text = data;
-        });
-    }
-  });
 
   return (
     <div className="w-full h-full flex flex-col text-white overflow-y-auto">
@@ -260,7 +237,7 @@ const SelectorList: React.FC<{
             key={doc.name}
             onClick={() => handleDocumentSelection(doc)}
             className="bg-gray-200 border border-gray-400 hover:bg-gray-300 hover:border-gray-600 text-black px=1 py-1 m-1 w-full text-sm"
-            >
+          >
             {doc.name}
           </button>
         ))
