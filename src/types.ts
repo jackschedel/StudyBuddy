@@ -1,13 +1,13 @@
-export type Role = 'user' | 'assistant' | 'system';
-export const roles: Role[] = ['user', 'assistant', 'system'];
-export type DocumentType = 'assignment' | 'lecture';
+export type Role = "user" | "assistant" | "system";
+export const roles: Role[] = ["user", "assistant", "system"];
+export type DocumentType = "assignment" | "lecture";
 
-export interface ContextDocument{
+export interface ContextDocument {
   doc_type: DocumentType;
   name: string;
   url: string;
   text: string;
-  }
+}
 
 export interface MessageInterface {
   role: Role;
@@ -56,10 +56,10 @@ export interface Folder {
 }
 
 export type ModelChoice =
-  | 'gpt-4'
-  | 'gpt-4-32k'
-  | 'gpt-3.5-turbo'
-  | 'gpt-3.5-turbo-16k';
+  | "gpt-4"
+  | "gpt-4-32k"
+  | "gpt-3.5-turbo"
+  | "gpt-3.5-turbo-16k";
 // | 'gpt-3.5-turbo-0301';
 // | 'gpt-4-0314'
 // | 'gpt-4-32k-0314'

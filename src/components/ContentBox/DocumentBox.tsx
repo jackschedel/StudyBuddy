@@ -7,23 +7,23 @@ import { uploadFromUrl } from "../../api/api";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const DocumentBox = () => {
-  const { contextDocument, setContextDocument, setDocText, docText } = useAppContext();
+  const { contextDocument, setContextDocument, setDocText, docText } =
+    useAppContext();
   const [numPages, setNumPages] = useState(0);
   const [text, setText] = useState("");
 
   useEffect(() => {
-    if (!contextDocument)
-      return;
+    if (!contextDocument) return;
 
-    const isHtml = contextDocument.url.startsWith("http://localhost:") && contextDocument.url.endsWith(".html");
+    const isHtml =
+      contextDocument.url.startsWith("http://localhost:") &&
+      contextDocument.url.endsWith(".html");
 
-    console.log(contextDocument)
+    console.log(contextDocument);
 
-    if(isHtml) {
+    if (isHtml) {
       setDocText(contextDocument.text);
-
     }
-
   }, [contextDocument]);
 
   useEffect(() => {
@@ -39,34 +39,34 @@ const DocumentBox = () => {
   }
 
   const isPdf =
-    contextDocument.url.startsWith("http://localhost:") && contextDocument.url.endsWith(".pdf");
+    contextDocument.url.startsWith("http://localhost:") &&
+    contextDocument.url.endsWith(".pdf");
 
-    const isHtml =
-    contextDocument.url.startsWith("http://localhost:") && contextDocument.url.endsWith(".html");
+  const isHtml =
+    contextDocument.url.startsWith("http://localhost:") &&
+    contextDocument.url.endsWith(".html");
 
-
-    async function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
-      setNumPages(numPages);
-      if (contextDocument) {
-          pdfjs.getDocument(contextDocument.url).promise.then(pdf => {
-              let text = "";
-              for(let i = 1; i <= numPages; i++) {
-                  pdf.getPage(i).then(page => {
-                      page.getTextContent().then(textContent => {
-                          for(let item of textContent.items) {
-                              if ('str' in item) {
-                                  text += item.str + " ";
-                              }
-                          }
-                          setText(text);
-                          setDocText(text);
-                      });
-                  });
+  async function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
+    if (contextDocument) {
+      pdfjs.getDocument(contextDocument.url).promise.then((pdf) => {
+        let text = "";
+        for (let i = 1; i <= numPages; i++) {
+          pdf.getPage(i).then((page) => {
+            page.getTextContent().then((textContent) => {
+              for (let item of textContent.items) {
+                if ("str" in item) {
+                  text += item.str + " ";
+                }
               }
+              setText(text);
+              setDocText(text);
+            });
           });
-      }
+        }
+      });
+    }
   }
-
 
   async function callFetchData() {
     if (
@@ -76,7 +76,10 @@ const DocumentBox = () => {
       try {
         const data = await uploadFromUrl(contextDocument.url);
         console.log(data);
-        let newUrl = data.pdf_url.replace('http://localhost', 'http://127.0.0.1');
+        let newUrl = data.pdf_url.replace(
+          "http://localhost",
+          "http://127.0.0.1",
+        );
         setContextDocument({ ...contextDocument, url: newUrl });
       } catch (error) {
         console.log("Fetch Error:", error);
@@ -85,7 +88,7 @@ const DocumentBox = () => {
   }
 
   return (
-<div className="w-full h-full bg-gray-100 flex flex-col justify-start items-center text-black p-2">
+    <div className="w-full h-full bg-gray-100 flex flex-col justify-start items-center text-black p-2">
       <h1 className="text-4xl pt-1 pb-2">{contextDocument.name}</h1>
       <div className="flex justify-center items-center w-full h-full overflow-hidden">
         {isPdf ? (

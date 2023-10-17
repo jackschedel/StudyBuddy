@@ -4,7 +4,6 @@ const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
 const OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "noApiKey";
 const PINECONE_API_KEY = localStorage.getItem("pinecone_api_key") || "noApiKey";
 
-
 /**
  * @param {any} documentUrl
  */
@@ -24,7 +23,6 @@ async function uploadFromUrl(documentUrl) {
     console.error(error);
   }
 }
-
 
 /**
  * @param {any} documentText
@@ -74,11 +72,11 @@ async function initializePinecone() {
     const response = await fetch(`${ServerUrl}init_pinecone`, {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         pinecone_api_key: PINECONE_API_KEY,
-      })
+      }),
     });
     return await response.json();
   } catch (error) {
@@ -102,18 +100,22 @@ async function fetchCourses() {
 /**
  * @param {any} courseId
  */
-async function fetchAnnouncements(courseId) { // returns list of pure announcement strings (no objects)
+async function fetchAnnouncements(courseId) {
+  // returns list of pure announcement strings (no objects)
   try {
-    const response = await fetch(`${UflUrl}api/v1/announcements?context_codes[]=course_${courseId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${UFL_API_KEY}`,
+    const response = await fetch(
+      `${UflUrl}api/v1/announcements?context_codes[]=course_${courseId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${UFL_API_KEY}`,
+        },
       },
-    });
+    );
     const temp = await response.json();
-    const announcements = []
+    const announcements = [];
     for (var i = 0; i < announcements.length; i++) {
-      announcements.push(temp[i].message.replace(/<[^>]*>/g, ''));
+      announcements.push(temp[i].message.replace(/<[^>]*>/g, ""));
     }
     return announcements;
   } catch (error) {

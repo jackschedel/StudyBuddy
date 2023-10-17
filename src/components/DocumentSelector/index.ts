@@ -1,1 +1,1 @@
-export { default } from './DocumentSelector';
+export { default } from "./DocumentSelector";

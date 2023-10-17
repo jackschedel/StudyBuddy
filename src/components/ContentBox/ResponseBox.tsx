@@ -39,30 +39,41 @@ const ResponseBox = () => {
   }, []);
 
   return (
-<div className="w-full h-full flex flex-col text-white pt-4 overflow-auto">
-      {(chatArray.length === 0 || !contextDocument) ? (
+    <div className="w-full h-full flex flex-col text-white pt-4 overflow-auto">
+      {chatArray.length === 0 || !contextDocument ? (
         <div className="">
-    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 rounded-lg m-1 h-auto text-left mx-5`}>
-        {!contextDocument ? 'Select a document to begin.' : 'Ask a question about the current document or pick a quick-action.'}
-    </p>
-    {false && chatArray.length === 0 && contextDocument ? (
-      <div>
-    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 mt-56 my-5 h-auto text-left mx-5`}>
-    {q1}
-    </p>
-    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}>
-    {q2}
-    </p>
-    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}>
-    {q3}
-    </p>
-    <p className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}>
-    {q4}
-    </p>
-    </div>
-
-) : null}
-</div>
+          <p
+            className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 rounded-lg m-1 h-auto text-left mx-5`}
+          >
+            {!contextDocument
+              ? "Select a document to begin."
+              : "Ask a question about the current document or pick a quick-action."}
+          </p>
+          {false && chatArray.length === 0 && contextDocument ? (
+            <div>
+              <p
+                className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 mt-56 my-5 h-auto text-left mx-5`}
+              >
+                {q1}
+              </p>
+              <p
+                className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}
+              >
+                {q2}
+              </p>
+              <p
+                className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}
+              >
+                {q3}
+              </p>
+              <p
+                className={`bg-gray-100 border border-gray-500 text-gray-500 p-3 py-8 rounded-lg m-1 my-5 h-auto text-left mx-5`}
+              >
+                {q4}
+              </p>
+            </div>
+          ) : null}
+        </div>
       ) : (
         <div>
           {chatArray.map((str, index) => (
@@ -82,9 +93,10 @@ const ResponseBox = () => {
           ))}
           {chatArray.length % 2 === 1 && (
             <p
-            className={`bg-gray-100 border border-gray-500 text-black p-3 rounded-r-xl rounded-l-lg m-1 h-auto text-left m-2 mr-10
-            `}          >
-            {typing || '\u00A0'}
+              className={`bg-gray-100 border border-gray-500 text-black p-3 rounded-r-xl rounded-l-lg m-1 h-auto text-left m-2 mr-10
+            `}
+            >
+              {typing || "\u00A0"}
             </p>
           )}
         </div>

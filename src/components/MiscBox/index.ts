@@ -1,1 +1,1 @@
-export { default } from './MiscBox';
+export { default } from "./MiscBox";
