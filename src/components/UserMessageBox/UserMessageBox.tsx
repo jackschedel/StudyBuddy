@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
 import { generateQuestions, queryDocumentQuestion } from "../../api/api";
-import { ContextDocument, DocumentType } from "@src/types";
+import { ContextDocument, DocumentType } from "../../types";
 
 const UserMessageBox = () => {
   const { appendChatArray, contextDocument, chatArray, docText } =

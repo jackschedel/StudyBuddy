@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
-import { ContextDocument, DocumentType } from "@src/types";
+import { ContextDocument, DocumentType } from "../../types";
 import {
   fetchAll,
   fetchCourseFiles,

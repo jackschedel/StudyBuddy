@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../../hooks/AppContext";
-import { ContextDocument, DocumentType } from "@src/types";
+import { ContextDocument, DocumentType } from "../../types";
 import { Document, Page, pdfjs } from "react-pdf";
 import { uploadFromUrl } from "../../api/api";
 

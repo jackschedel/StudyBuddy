@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { ContextDocument, DocumentType } from "@src/types";
+import { ContextDocument, DocumentType } from "../types";
 
 interface AppContext {
   chatArray: string[];
