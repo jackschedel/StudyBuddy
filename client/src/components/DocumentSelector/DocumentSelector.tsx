@@ -3,6 +3,7 @@ import { useAppContext } from "../../hooks/AppContext";
 import { ContextDocument, DocumentType } from "../../types";
 import {
   fetchAll,
+  fetchAnnouncements,
   fetchCourseFiles,
   fetchCourses,
   fetchCourseTasks,
@@ -10,14 +11,10 @@ import {
 
 const DocumentSelector = () => {
   const [selectedTab, setSelectedTab] = useState<DocumentType>("assignment");
-  const {
-    setContextDocument,
-    fetchedCanvasData,
-    setFetchedCanvasData,
-    setChatArray,
-  } = useAppContext();
+  const { setContextDocument, setChatArray } = useAppContext();
   const [selectedCourseId, setSelectedCourseId] = useState<null | number>(null);
-  const [courseData, setCourseData] = useState<any[]>([]);
+  const [courseData, setCourseData] = useState<any>(null);
+  const [canvasApiKey, setCanvasApiKey] = useState<string | null>(null);
 
   useEffect(() => {
     setChatArray([]);
@@ -27,53 +24,45 @@ const DocumentSelector = () => {
     setChatArray([]);
   }, [selectedCourseId]);
 
-  async function callFetchAllData() {
-    try {
-      const data = await fetchAll();
-      setFetchedCanvasData(data);
-    } catch (error) {
-      console.log("Fetch-all Error:", error);
-    }
-  }
-
-  // todo refactor to use fetchedCanvasData if non-null
-  // if (!fetchedCanvasData) {
-  //   callFetchAllData();
-  // }
-
   const handleDocumentSelection = (doc: ContextDocument) => {
     setContextDocument(doc);
   };
 
-  useEffect(() => {
-    async function callFetchData() {
-      try {
-        const data = await fetchCourses();
-        setCourseData(data);
-      } catch (error) {
-        console.log("Fetch Error:", error);
-      }
+  async function callFetchCourseList() {
+    try {
+      const data = await fetchCourses();
+      setCourseData(data);
+      console.log("courses fetched");
+      console.log(data);
+    } catch (error) {
+      console.log("Fetch Error:", error);
     }
+  }
 
-    callFetchData();
+  async function callFetchAnnouncements(courseId: number) {
+    try {
+      const data = await fetchAnnouncements(courseId);
+      console.log("announcements:");
+      console.log(data);
+    } catch (error) {
+      console.log("Fetch Error:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (localStorage.getItem("canvas_api_key") != canvasApiKey) {
+      setCanvasApiKey(localStorage.getItem("canvas_api_key"));
+      callFetchCourseList();
+    }
   }, []);
 
   useEffect(() => {
-    console.log("fetchAll result:");
-    console.log(fetchedCanvasData);
-  }, [fetchedCanvasData]);
-
-  useEffect(() => {
-    console.log("course id: " + selectedCourseId);
+    console.log("selected course id: " + selectedCourseId);
   }, [selectedCourseId]);
-
-  useEffect(() => {
-    console.log("course data:");
-    console.log(courseData);
-  }, [courseData]);
 
   const handleCourseChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCourseId(Number(event.target.value));
+    callFetchAnnouncements(Number(event.target.value));
   };
 
   return (
@@ -169,16 +158,12 @@ const SelectorList: React.FC<{
       } catch (error) {
         console.log("Fetch Error:", error);
       } finally {
-        setIsLoading(false); // Set loading status to false when data is fetched
+        setIsLoading(false);
       }
     }
 
     callFetchData();
   }, [selectedTab, selectedCourseId]);
-
-  useEffect(() => {
-    console.log(courseData);
-  }, [courseData]);
 
   let docs: ContextDocument[];
 

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../../hooks/AppContext";
 import { ContextDocument, DocumentType } from "../../types";
 import { Document, Page, pdfjs } from "react-pdf";
+import { fetchAssignmentHtml } from "../../api/api";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -10,20 +11,35 @@ const DocumentBox = () => {
     useAppContext();
   const [numPages, setNumPages] = useState(0);
   const [text, setText] = useState("");
+  const [isHtml, setIsHtml] = useState(false);
 
   useEffect(() => {
     if (!contextDocument) return;
 
-    const isHtml =
-      contextDocument.url.startsWith("http://localhost:") &&
-      contextDocument.url.endsWith(".html");
+    if (contextDocument.url.endsWith("history?headless=1")) {
+      callFetchDocumentAssignmentHtml();
+    }
 
     console.log(contextDocument);
-
-    if (isHtml) {
-      setDocText(contextDocument.text);
-    }
   }, [contextDocument]);
+
+  async function callFetchDocumentAssignmentHtml() {
+    try {
+      if (contextDocument) {
+        const data = await fetchAssignmentHtml(contextDocument.url);
+
+        if (data) {
+          let temp = contextDocument;
+          temp.url = data;
+          setContextDocument(temp);
+          console.log(data);
+          setIsHtml(true);
+        }
+      }
+    } catch (error) {
+      console.log("Fetch Error:", error);
+    }
+  }
 
   useEffect(() => {
     console.log("Document Text: ", docText);
@@ -40,10 +56,6 @@ const DocumentBox = () => {
   const isPdf =
     contextDocument.url.startsWith("http://localhost:") &&
     contextDocument.url.endsWith(".pdf");
-
-  const isHtml =
-    contextDocument.url.startsWith("http://localhost:") &&
-    contextDocument.url.endsWith(".html");
 
   async function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);

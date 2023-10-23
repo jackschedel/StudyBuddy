@@ -1,5 +1,5 @@
-const ServerUrl = "http://127.0.0.1:5000/";
-const UflUrl = `${ServerUrl}uflproxy/`;
+const ServerUrl = "http://127.0.0.1:8080/";
+const UflUrl = `${ServerUrl}ufl.instructure.com/`;
 const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
 const OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "noApiKey";
 const PINECONE_API_KEY = localStorage.getItem("pinecone_api_key") || "noApiKey";
@@ -13,6 +13,20 @@ async function fetchCourses() {
       },
     });
     return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function fetchAssignmentHtml(htmlUrl: string) {
+  try {
+    const response = await fetch(`${ServerUrl}${htmlUrl}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${UFL_API_KEY}`,
+      },
+    });
+    return await response.text();
   } catch (error) {
     console.log(error);
   }
@@ -54,9 +68,14 @@ async function fetchAssignments(courseId: number) {
       },
     );
     const assignments = await response.json();
+    console.log(assignments);
     for (const assignment of assignments) {
       if (assignment.submission_types.includes("online_quiz")) {
-        assignment.html_url = `${UflUrl}courses/${courseId}/assignments/${assignment.id}/history?headless=1`;
+        const url = new URL(assignment.submissions_download_url);
+        const paths = url.pathname.split("/");
+        const courseNum = paths[2];
+        const quizNum = paths[4];
+        assignment.html_url = `https://ufl.instructure.com/courses/${courseNum}/quizzes/${quizNum}/history?headless=1`;
         validAssignments.push(assignment);
       }
     }
@@ -169,4 +188,11 @@ async function fetchAll() {
   }
 }
 
-export { fetchCourses, fetchCourseTasks, fetchCourseFiles, fetchAll };
+export {
+  fetchCourses,
+  fetchCourseTasks,
+  fetchCourseFiles,
+  fetchAll,
+  fetchAnnouncements,
+  fetchAssignmentHtml,
+};
