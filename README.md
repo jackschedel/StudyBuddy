@@ -1,46 +1,35 @@
-# Getting Started with Create React App
+<h1 align="center"><b>StudyBuddy</b></h1>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h4 align="center"><b>Your personal guide to class documents and past assignments</b></h4>
+<h4 align="center"><a href="https://devpost.com/software/studybuddy-t6bldn">Made in 24 hours as part of the 2023 UF AI Days Hackathon</a></h4>
 
-## Available Scripts
+<p align="center">
+<a href="https://github.com/jackschedel/StudyBuddy/blob/main/LICENSE" target="_blank">
+<img src="https://img.shields.io/github/license/jackschedel/StudyBuddy?style=flat-square" alt="licence" />
+</a>
+<a href="https://github.com/jackschedel/StudyBuddy/issues" target="_blank">
+<img src="https://img.shields.io/github/issues/jackschedel/StudyBuddy?style=flat-square" alt="issues"/>
+</a>
+<a href="https://github.com/jackschedel/StudyBuddy/pulls" target="_blank">
+<img src="https://img.shields.io/github/issues-pr/jackschedel/StudyBuddy?style=flat-square" alt="pull-requests"/>
+</a>
 
-In the project directory, you can run:
+## 📚👩🎓 StudyBuddy: A Personalized Tutoring App
 
-### `npm start`
+Meet StudyBuddy, your personal guide to your academic success. This innovative platform is designed to provide targeted assistance and personalized tutoring based on your class documents and past assignments. Whether you need help with specific questions, wish to grasp the main points of an assignment, or simply want to refresh your knowledge before an exam, StudyBuddy is your ultimate academic companion. By accessing your course documents, StudyBuddy provides context-sensitive guidance and support, boosting your understanding and performance in your courses.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 💡 Inspiration
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Our primary inspiration for StudyBuddy sprouted from the evolving world of User Interface (UI) design. We found a growing trend towards users querying AI for information rather than browsing through traditional UIs. This, coupled with the desire to create a robust platform that could evolve and expand over time, led to the genesis of StudyBuddy. We envisioned a platform that could revolutionize the way students interact with their course materials and assignments, making learning more personal and effective.
 
-### `npm test`
+## 🛠️ How we built it
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+StudyBuddy was brought to life using a combination of cutting-edge technologies. The front end was crafted using TypeScript and React, providing an intuitive and user-friendly interface. For the backend, we utilized a Flask app to make API calls for the Canvas API, OpenAI API, and Documents Loaders/Transformers. The Langchain library was instrumental for the LLM Prompt engineering and chaining, enabling us to create a dynamic and responsive tutoring system. This blend of technologies allowed us to create a platform that is both powerful and adaptable.
 
-### `npm run build`
+## 🔨 Built With
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- TypeScript
+- TailwindCSS
+- React
+- Flask
+- Langchain
