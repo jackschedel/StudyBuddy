@@ -4,86 +4,6 @@ const UFL_API_KEY = localStorage.getItem("canvas_api_key") || "noApiKey";
 const OPENAI_API_KEY = localStorage.getItem("openai_api_key") || "noApiKey";
 const PINECONE_API_KEY = localStorage.getItem("pinecone_api_key") || "noApiKey";
 
-/**
- * @param {any} documentUrl
- */
-async function uploadFromUrl(documentUrl) {
-  try {
-    const response = await fetch(`${ServerUrl}upload_from_url`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        url: `${documentUrl}`,
-      }),
-    });
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-/**
- * @param {any} documentText
- */
-async function generateQuestions(documentText) {
-  try {
-    const response = await fetch(`${ServerUrl}generate_questions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        document_text: `${documentText}`,
-      }),
-    });
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-/**
- * @param {any} documentText
- * @param {any} queryQuestion
- */
-async function queryDocumentQuestion(documentText, queryQuestion) {
-  try {
-    const response = await fetch(`${ServerUrl}query_documnent_question`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        document_text: `${documentText}`,
-        question: `${queryQuestion}`,
-      }),
-    });
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-// not working
-async function initializePinecone() {
-  try {
-    const response = await fetch(`${ServerUrl}init_pinecone`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        pinecone_api_key: PINECONE_API_KEY,
-      }),
-    });
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 async function fetchCourses() {
   try {
     const response = await fetch(`${UflUrl}api/v1/courses`, {
@@ -97,10 +17,8 @@ async function fetchCourses() {
     console.log(error);
   }
 }
-/**
- * @param {any} courseId
- */
-async function fetchAnnouncements(courseId) {
+
+async function fetchAnnouncements(courseId: number) {
   // returns list of pure announcement strings (no objects)
   try {
     const response = await fetch(
@@ -122,10 +40,8 @@ async function fetchAnnouncements(courseId) {
     console.log(error);
   }
 }
-/**
- * @param {any} courseId
- */
-async function fetchAssignments(courseId) {
+
+async function fetchAssignments(courseId: number) {
   const validAssignments = [];
   try {
     const response = await fetch(
@@ -148,10 +64,7 @@ async function fetchAssignments(courseId) {
   return validAssignments;
 }
 
-/**
- * @param {any} courseId
- */
-async function fetchCourseTasks(courseId) {
+async function fetchCourseTasks(courseId: number) {
   try {
     const assignments = await fetchAssignments(courseId);
     const quizzes = await fetchQuizzes(courseId);
@@ -167,10 +80,7 @@ async function fetchCourseTasks(courseId) {
   }
 }
 
-/**
- * @param {any} courseId
- */
-async function fetchQuizzes(courseId) {
+async function fetchQuizzes(courseId: number) {
   const validQuizzes = [];
   try {
     const response = await fetch(
@@ -194,10 +104,7 @@ async function fetchQuizzes(courseId) {
   return validQuizzes;
 }
 
-/**
- * @param {any} courseId
- */
-async function fetchCourseFiles(courseId) {
+async function fetchCourseFiles(courseId: number) {
   const files = [];
   try {
     const response = await fetch(
@@ -221,10 +128,7 @@ async function fetchCourseFiles(courseId) {
   return files;
 }
 
-/**
- * @param {any} folderId
- */
-async function fetchFilesByFolder(folderId) {
+async function fetchFilesByFolder(folderId: number) {
   try {
     const response = await fetch(`${UflUrl}api/v1/folders/${folderId}/files`, {
       method: "GET",
@@ -239,10 +143,7 @@ async function fetchFilesByFolder(folderId) {
   }
 }
 
-/**
- * @param {any} courseId
- */
-async function fetchCourse(courseId) {
+async function fetchCourse(courseId: number) {
   try {
     const tasks = await fetchCourseTasks(courseId);
     const files = await fetchCourseFiles(courseId);
@@ -268,13 +169,4 @@ async function fetchAll() {
   }
 }
 
-module.exports = {
-  fetchCourses,
-  fetchCourseTasks,
-  fetchCourseFiles,
-  fetchAll,
-  initializePinecone,
-  generateQuestions,
-  queryDocumentQuestion,
-  uploadFromUrl,
-};
+export { fetchCourses, fetchCourseTasks, fetchCourseFiles, fetchAll };

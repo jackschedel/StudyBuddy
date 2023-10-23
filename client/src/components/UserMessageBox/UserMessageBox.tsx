@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
-import { generateQuestions, queryDocumentQuestion } from "../../api/api";
 import { ContextDocument, DocumentType } from "../../types";
 
 const UserMessageBox = () => {
@@ -12,7 +11,7 @@ const UserMessageBox = () => {
   const handleSubmit = useCallback(() => {
     if (text.trim() !== "") {
       appendChatArray(text);
-      askDocumentQuestion();
+      // askDocumentQuestion();
       setText("");
     }
   }, [text, appendChatArray]);
@@ -26,7 +25,7 @@ const UserMessageBox = () => {
       setText("Provide a summary of the document.");
     }
     appendChatArray(text);
-    askDocumentQuestion();
+    // askDocumentQuestion();
     setText("");
   }, [text, appendChatArray, contextDocument]);
 
@@ -46,18 +45,6 @@ const UserMessageBox = () => {
     },
     [handleSubmit],
   );
-
-  async function askDocumentQuestion() {
-    try {
-      const data = await queryDocumentQuestion(docText, text);
-      console.log(data.response);
-      appendChatArray(data.response.output);
-    } catch (error) {
-      console.log("query agent error:", error);
-    }
-  }
-
-  //generateQuestionsFromDoc();
 
   return (
     <div

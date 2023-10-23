@@ -154,10 +154,12 @@ const SelectorList: React.FC<{
       setIsLoading(true); // Set loading status to true when fetching data
       try {
         let data;
-        if (selectedTab == "assignment") {
-          data = await fetchCourseTasks(selectedCourseId);
-        } else {
-          data = await fetchCourseFiles(selectedCourseId);
+        if (selectedCourseId) {
+          if (selectedTab == "assignment") {
+            data = await fetchCourseTasks(selectedCourseId);
+          } else {
+            data = await fetchCourseFiles(selectedCourseId);
+          }
         }
         if (data) {
           setCourseData(data);

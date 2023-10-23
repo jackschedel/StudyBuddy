@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../hooks/AppContext";
-import { generateQuestions } from "../../api/api";
 
 const ResponseBox = () => {
   const { chatArray, contextDocument, docText, setChatArray } = useAppContext();
@@ -11,14 +10,7 @@ const ResponseBox = () => {
   const [q3, sq3] = useState("");
   const [q4, sq4] = useState("");
 
-  async function generateQuestionsFromDoc() {
-    try {
-      const data = await generateQuestions(docText);
-      console.log(data);
-    } catch (error) {
-      console.log("query agent error:", error);
-    }
-  }
+  async function generateQuestionsFromDoc() {}
 
   useEffect(() => {
     setChatArray([]);
