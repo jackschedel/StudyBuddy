@@ -18,6 +18,10 @@
 
 Meet StudyBuddy, your personal guide to your academic success. This innovative platform is designed to provide targeted assistance and personalized tutoring based on your class documents and past assignments. Whether you need help with specific questions, wish to grasp the main points of an assignment, or simply want to refresh your knowledge before an exam, StudyBuddy is your ultimate academic companion. By accessing your course documents, StudyBuddy provides context-sensitive guidance and support, boosting your understanding and performance in your courses.
 
+<p align="center">
+    <img src="https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/002/625/266/datas/original.png" alt="landing" width=800 />
+</p>
+
 ## 💡 Inspiration
 
 Our primary inspiration for StudyBuddy sprouted from the evolving world of User Interface (UI) design. We found a growing trend towards users querying AI for information rather than browsing through traditional UIs. This, coupled with the desire to create a robust platform that could evolve and expand over time, led to the genesis of StudyBuddy. We envisioned a platform that could revolutionize the way students interact with their course materials and assignments, making learning more personal and effective.
